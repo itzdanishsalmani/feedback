@@ -1,6 +1,6 @@
 export const NavBar = () => {
     return (
-        <div className="mx-12 mt-4">
+        <div>
         <div className="flex justify-between items-center ">
             <div>
             <img src="/logo.svg" alt="" width={150} />
