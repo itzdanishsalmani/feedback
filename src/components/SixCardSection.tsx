@@ -1,4 +1,4 @@
-export const SixCards = () =>{
+export const SixCardSection = () =>{
     return (
         <div className="mt-12 flex flex-col justify-center items-center">
             <div className="text-4xl md:text-5xl md:w-8/12 font-bold text-center ">
@@ -74,8 +74,8 @@ interface CardText {
 
 const CardWrapperLeftText = ({text1,text2,text3,text4,text4_css,image}:CardText) => {
     return (
-        <div className="mt-24 sm:px-8 grid sm:grid-cols-2 items-center">
-            <div className="md:mr-8 ">
+        <div className="mt-24 md:px-8 grid md:grid-cols-2 items-center">
+            <div className="md:mr-8 mb-4">
                 <div className="mt-4 text-xl text-blue-800">{text1}</div>
                 <div className="mt-4 text-white text-4xl font-bold">{text2}</div>
                 <div className="mt-4 text-lg">{text3}</div>
@@ -96,24 +96,20 @@ const CardWrapperLeftText = ({text1,text2,text3,text4,text4_css,image}:CardText)
 
 const CardWrapperRightText = ({text1,text2,text3,text4,text4_css,image}:CardText) => {
     return (
-        <div className="mt-24 sm:px-8 grid sm:grid-cols-2 items-center">
-            <div className="md:ml-8">
+        <div className="mt-24 md:px-8 grid md:grid-cols-2 items-center">
+            <div className="md:mr-8 order-last md:order-first">
                 <div>
                     <img src={image} alt="" width={500} />
                 </div>
             </div>
 
-            <div className="md:mr-8 ">
+            <div className="md:ml-8 mb-4">
                 <div className="mt-4 text-xl text-blue-800">{text1}</div>
                 <div className="mt-4 text-white text-4xl font-bold">{text2}</div>
                 <div className="mt-4 text-lg">{text3}</div>
                 <div className={text4_css}>{text4}</div>
-                <div><button className="mt-4 p-2 bg-blue-700 rounded-lg">Try it for Free</button></div>
+                <div><button className="mt-4 p-2 bg-blue-700 rounded-lg">Try if for Free</button></div>
             </div>
         </div>
     )
 }
-
-
-
-

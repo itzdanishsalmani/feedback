@@ -1,17 +1,19 @@
-import { Main } from "./components/Main";
-import { NavBar } from "./components/NavBar"
-import { Cards } from "./components/Cards"
 import './index.css';
-import { SixCards } from "./components/SixCards";
+import { MainSection } from "./components/MainSection";
+import { NavBar } from "./components/NavBar"
+import { NineCardSection } from "./components/NineCardSection"
+import { SixCardSection } from "./components/SixCardSection";
+import { IntegrateSection } from './components/IntegrateSection';
 
 function App() {
   
   return (
     <div className="mx-3 md:mx-12 mt-4">
       <NavBar />
-      <Main />
-      <Cards />
-      <SixCards />
+      <MainSection />
+      <NineCardSection />
+      <SixCardSection />
+      <IntegrateSection />
       </div>  
      
   )

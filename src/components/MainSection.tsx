@@ -1,4 +1,4 @@
-export const Main = () => {
+export const MainSection = () => {
     return (
         <div>
         <div className="mt-24 flex justify-center">

@@ -1,4 +1,4 @@
-export const Cards = () => {
+export const NineCardSection = () => {
     return (
         <div>
         <div className="mt-12 flex flex-col justify-center items-center">
