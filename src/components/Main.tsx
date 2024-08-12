@@ -74,7 +74,6 @@ export const Main = () => {
 
                     </div>
 
-
             <div className="mt-12 w-auto h-0.1 bg-slate-400">
                 <hr />
             </div>

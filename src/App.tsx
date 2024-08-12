@@ -2,6 +2,7 @@ import { Main } from "./components/Main";
 import { NavBar } from "./components/NavBar"
 import { Cards } from "./components/Cards"
 import './index.css';
+import { SixCards } from "./components/SixCards";
 
 function App() {
   
@@ -10,6 +11,7 @@ function App() {
       <NavBar />
       <Main />
       <Cards />
+      <SixCards />
       </div>  
      
   )
