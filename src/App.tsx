@@ -4,6 +4,7 @@ import { NavBar } from "./components/NavBar"
 import { NineCardSection } from "./components/NineCardSection"
 import { SixCardSection } from "./components/SixCardSection";
 import { IntegrateSection } from './components/IntegrateSection';
+import { Footer } from './components/Footer';
 
 function App() {
   
@@ -14,6 +15,7 @@ function App() {
       <NineCardSection />
       <SixCardSection />
       <IntegrateSection />
+      <Footer />
       </div>  
      
   )

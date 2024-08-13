@@ -29,16 +29,14 @@ export const MainSection = () => {
             Trusted customers
             </div>
 
-            <div className="mt-6 hidden md:block">
-                <div className="flex items-center justify-between">
+            <div className="mt-6 px-4">
+                <div className="grid grid-cols-2 md:grid-cols-5 items-center md:items-baseline">
                     <div><img src="mixpanel.png" alt="" width={150} /></div>      
                     <div><img src="kofi.png" alt="" width={150} /></div>          
                     <div><img src="microacquire.svg" alt="" width={150} /></div>  
                     <div><img src="yoast.png" alt="" width={150} /></div>     
                     <div><img src="yotta.png" alt="" width={150} /></div>     
-                </div>
-
-                <div className="mt-6 flex items-center justify-between">
+                
                    <div><img src="earnest-capital.svg" alt="" width={150} /></div>
                    <div><img src="rewardful.svg" alt="" width={150} /></div>
                    <div><img src="chime.svg" alt="" width={150} /></div>
@@ -46,33 +44,7 @@ export const MainSection = () => {
                    <div><img src="chilipiper.png" alt="" width={150} /></div>
                 </div>
             </div>
-                    <div className="mt-6 md:hidden">
-                        <div className="flex items-center justify-evenly">
-                            <div><img src="mixpanel.png" alt="" width={100} /></div>      
-                            <div><img src="kofi.png" alt="" width={100} /></div>
-                        </div>
-
-                        <div className="flex items-center justify-evenly">
-                            <div><img src="microacquire.svg" alt="" width={100} /></div>  
-                            <div><img src="yoast.png" alt="" width={100} /></div>
-                        </div>
-
-                        <div className="flex items-center justify-evenly">
-                            <div><img src="yotta.png" alt="" width={100} /></div>
-                            <div><img src="earnest-capital.svg" alt="" width={100} /></div>
-                        </div> 
-
-                        <div className="flex items-center justify-evenly">
-                            <div><img src="rewardful.svg" alt="" width={100} /></div>
-                            <div><img src="chime.svg" alt="" width={100} /></div>
-                        </div>    
-                    
-                        <div className="flex items-center justify-evenly">
-                            <div><img src="levels-fyi.svg" alt="" width={100} /></div>
-                            <div><img src="chilipiper.png" alt="" width={100} /></div>
-                        </div>
-
-                    </div>
+                   
 
             <div className="mt-12 w-auto h-0.1 bg-slate-400">
                 <hr />
