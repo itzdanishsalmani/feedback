@@ -1,4 +1,7 @@
+import { useState } from "react"
+
 export const NavBar = () => {
+    const [isPhoneView,setPhoneView] = useState(false)
     return (
         <div>
         <div className="flex justify-between items-center ">
@@ -18,11 +21,23 @@ export const NavBar = () => {
                 <div>Sign up</div>
             </div>
 
-            <div className="block md:hidden">
-                <img src="menu.svg" alt="" className="" />
+            <div className="block md:hidden" onClick={()=>{
+                setPhoneView(!isPhoneView)
+            }} >
+                <img src="menu.svg" alt="" />
             </div>
 
             </div>
+
+            { isPhoneView && (
+            <div className="px-4 mt-4 md:hidden space-y-2">
+                <div>Customers</div>
+                <div>Features</div>
+                <div>Integrations</div>
+                <div>Pricing</div>
+            </div>
+    )}
+            
         </div>
     )
 }  
