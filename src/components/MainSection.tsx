@@ -31,17 +31,17 @@ export const MainSection = () => {
 
             <div className="mt-6 px-4">
                 <div className="grid grid-cols-2 md:grid-cols-5 items-center md:items-baseline">
-                    <div><img src="mixpanel.png" alt="" width={150} /></div>      
-                    <div><img src="kofi.png" alt="" width={150} /></div>          
-                    <div><img src="microacquire.svg" alt="" width={150} /></div>  
-                    <div><img src="yoast.png" alt="" width={150} /></div>     
-                    <div><img src="yotta.png" alt="" width={150} /></div>     
+                    <div className="w-[100px] md:w-[150px]"><img src="mixpanel.png" alt="" /></div>      
+                    <div className="w-[100px] md:w-[150px]"><img src="kofi.png" alt="" /></div>          
+                    <div className="w-[100px] md:w-[150px]"><img src="microacquire.svg" alt="" /></div>  
+                    <div className="w-[100px] md:w-[150px]"><img src="yoast.png" alt="" /></div>     
+                    <div className="w-[100px] md:w-[150px]"><img src="yotta.png" alt="" /></div>     
                 
-                   <div><img src="earnest-capital.svg" alt="" width={150} /></div>
-                   <div><img src="rewardful.svg" alt="" width={150} /></div>
-                   <div><img src="chime.svg" alt="" width={150} /></div>
-                   <div><img src="levels-fyi.svg" alt="" width={150} /></div>
-                   <div><img src="chilipiper.png" alt="" width={150} /></div>
+                   <div className="w-[100px] md:w-[150px]"><img src="earnest-capital.svg" alt="" /></div>
+                   <div className="w-[100px] md:w-[150px]"><img src="rewardful.svg" alt="" /></div>
+                   <div className="w-[100px] md:w-[150px]"><img src="chime.svg" alt="" /></div>
+                   <div className="w-[100px] md:w-[150px]"><img src="levels-fyi.svg" alt="" /></div>
+                   <div className="w-[100px] md:w-[150px]"><img src="chilipiper.png" alt="" /></div>
                 </div>
             </div>
                    
