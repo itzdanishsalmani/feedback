@@ -1,7 +1,7 @@
 export const MainSection = () => {
     return (
         <div>
-        <div className="mt-24 flex justify-center">
+        <div className="mt-8 md:mt-24 flex justify-center">
             <div className="text-4xl md:text-5xl md:w-6/12 font-bold text-center ">
             Get testimonials from your customers with ease
             </div>

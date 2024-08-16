@@ -30,7 +30,7 @@ export const NavBar = () => {
             </div>
 
             { isPhoneView && (
-            <div className="px-4 mt-4 md:hidden space-y-2">
+            <div className="px-4 mt-4 border-b border-neutral-800 md:hidden space-y-2">
                 <div>Customers</div>
                 <div>Features</div>
                 <div>Integrations</div>
