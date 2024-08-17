@@ -1,23 +1,25 @@
+import { SignUp } from './components/Pages/SignUp';
 import './index.css';
-import { MainSection } from "./components/MainSection";
-import { NavBar } from "./components/NavBar"
-import { NineCardSection } from "./components/NineCardSection"
-import { SixCardSection } from "./components/SixCardSection";
-import { IntegrateSection } from './components/IntegrateSection';
-import { Footer } from './components/Footer';
+// import { MainSection } from "./components/UI/MainSection";
+// import { NavBar } from "./components/UI/NavBar"
+// import { NineCardSection } from "./components/UI/NineCardSection"
+// import { SixCardSection } from "./components/UI/SixCardSection";
+// import { IntegrateSection } from './components/UI/IntegrateSection';
+// import { Footer } from './components/UI/Footer';
 
 function App() {
   
   return (
     <div className="mx-3 md:mx-12 mt-4">
-      <NavBar />
+      {/* <NavBar />
       <MainSection />
       <NineCardSection />
       <SixCardSection />
       <IntegrateSection />
-      <Footer />
+      <Footer /> */}
+
+      <SignUp />
       </div>  
-     
   )
 }
 
