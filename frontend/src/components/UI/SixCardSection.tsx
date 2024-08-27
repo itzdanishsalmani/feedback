@@ -1,5 +1,6 @@
 export const SixCardSection = () =>{
     return (
+        <div className="max-w-[1200px] mx-auto">
         <div className="mt-12 flex flex-col justify-center items-center">
             <div className="text-4xl md:text-5xl md:w-8/12 font-bold text-center ">
             Collect and display testimonials all in one solution
@@ -60,6 +61,7 @@ export const SixCardSection = () =>{
 
             </div>
         </div>
+    </div>
     )
 } 
 

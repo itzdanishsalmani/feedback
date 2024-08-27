@@ -1,6 +1,6 @@
 export const IntegrateSection = () => {
     return (
-        <div>
+        <div className="max-w-[1200px] mx-auto">
             <div className="mt-56 flex justify-center">
             <div className="text-4xl md:text-5xl md:w-6/12 font-bold text-center ">
             Integrate with any platform

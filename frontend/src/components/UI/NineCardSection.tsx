@@ -1,6 +1,6 @@
 export const NineCardSection = () => {
     return (
-        <div>
+        <div className="max-w-[1200px] mx-auto">
         <div className="mt-12 flex flex-col justify-center items-center">
             <div className="text-4xl md:text-5xl md:w-8/12 font-bold text-center ">
                 Add testimonials to your website with no coding!

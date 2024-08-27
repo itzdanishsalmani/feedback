@@ -1,5 +1,6 @@
 export const Footer = () => {
     return (
+        <div className="max-w-[1200px] mx-auto">
         <div className="mt-24 mx-4">
             <div className="grid grid-cols-1 md:grid-cols-3">
                 <div >
@@ -58,5 +59,6 @@ export const Footer = () => {
 
             </div>
         </div>
+    </div>
     )
 }

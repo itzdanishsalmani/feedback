@@ -3,7 +3,7 @@ import { useState } from "react"
 export const NavBar = () => {
     const [isPhoneView,setPhoneView] = useState(false)
     return (
-        <div>
+        <div className="max-w-[1200px] mx-auto">
         <div className="flex justify-between items-center ">
             <div>
             <img src="/logo.svg" alt="" width={150} />
