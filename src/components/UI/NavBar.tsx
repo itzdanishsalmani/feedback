@@ -26,7 +26,6 @@ export const NavBar = () => {
             }} >
                 <img src="menu.svg" alt="" />
             </div>
-
             </div>
 
             { isPhoneView && (

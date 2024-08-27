@@ -15,7 +15,6 @@ export function LandingPage() {
       <SixCardSection />
       <IntegrateSection />
       <Footer />
-
       </div>  
   )
 }

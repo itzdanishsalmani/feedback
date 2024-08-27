@@ -1,6 +1,6 @@
 export const Footer = () => {
     return (
-        <div className="mt-24">
+        <div className="mt-24 mx-4">
             <div className="grid grid-cols-1 md:grid-cols-3">
                 <div >
                     <div><img src="logo.svg" alt="" width={150} /></div>
