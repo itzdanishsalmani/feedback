@@ -12,9 +12,18 @@ model User {
   username  String  @unique
   email     String
   password  String 
+  userspace UserSpace[]
 
 }
 
-model UserSpace {
-  
+model UserSpace {s
+  id              Int     @id @default(autoincrement())
+  spaceName       String 
+  Header          String
+  Description     String
+  Questions       String
+  name            String
+  email           String
+  userId          Int
+  user            User    @relation(fields: [userId],references: [id])
 } 

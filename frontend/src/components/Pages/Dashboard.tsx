@@ -24,7 +24,7 @@ function Mid() {
           testimonials and build a wall of love
         </div>
         <div>
-            <button className="border">Dismiss</button>
+          <button className="border">Dismiss</button>
         </div>
       </div>
       <div className="md:pl-24 px-4 md:mt-4">
@@ -35,16 +35,16 @@ function Mid() {
 }
 
 function Space() {
-    return (
+  return (
+    <div>
+      <div className="mt-24 flex justify-between items-center px-24">
         <div>
-            <div className="mt-24 flex justify-between items-center px-24">
-                <div>
-                    Spaces
-                </div>
-                <div>
-                <button className="border">Create Space</button>
-                </div>
-            </div>
+          Spaces
         </div>
-    )
+        <div>
+          <button className="border">Create Space</button>
+        </div>
+      </div>
+    </div>
+  )
 }
