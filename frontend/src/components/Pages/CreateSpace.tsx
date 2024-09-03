@@ -1,4 +1,17 @@
+import { useState } from "react"
+
 export function CreateSpace() {
+
+    const [spaceName, setSpaceName] = useState<string>("")
+    const [title, setTile] = useState<string>("")
+    const [customMessage, setCustomMessage] = useState<string>("")
+
+    const [allQuestions, setAllQuestions] = useState<any>({
+        question1: "Question 1",
+        question2: "Question 2",
+        question3: "Question 3"
+    })
+
     return (
         <div className="max-w-[1200px] mx-auto text-gray-800">
             <div className="grid grid-cols-12">
@@ -7,20 +20,22 @@ export function CreateSpace() {
                         <div>
                             image
                         </div>
-                        <div>dlknsdfln</div>
+                        <div>{spaceName===''? "Space Name":spaceName
+                            }</div>
                         <div className="mt-4 text-3xl font-bold">
-                            Header Goes here
+                            {title === ''? "Header Goes here" : title}
+                            
                         </div>
                         <div className="mt-4 ">
-                            Custom message goes here
+                            {customMessage===''? "Custom message goes here" : customMessage}
                         </div>
 
                         <div className="mt-4">
                             Questions comes here
 
-                            <div>Questons</div>
-                            <div>Questons</div>
-                            <div>Questons</div>
+                            <div>{allQuestions.question1 === ''? allQuestions.question1 : allQuestions.question1}</div>
+                            <div>{allQuestions.question2 === ''? allQuestions.question1 : allQuestions.question2}</div>
+                            <div>{allQuestions.question3 === ''? allQuestions.question1 : allQuestions.question3}</div>
                         </div>
                     </div>
                 </div>
@@ -40,7 +55,10 @@ export function CreateSpace() {
 
                     <div className="mt-12">
                         <div>Space name</div>
-                        <input type="text" placeholder="Space name" className="border" />
+                        <input type="text" placeholder="Space name" className="border"
+                            onChange={(e) => {
+                                setSpaceName(e.target.value)
+                            }} />
                     </div>
 
                     <div className="mt-4">
@@ -53,22 +71,52 @@ export function CreateSpace() {
                     <div className="mt-4">
                         <div>Header Title</div>
                         <div>
-                            <input type="text" placeholder="Title" className="border" />
+                            <input type="text" placeholder="Title" className="border"
+                                onChange={(e) => {
+                                    setTile(e.target.value)
+                                }} />
                         </div>
                     </div>
 
                     <div className="mt-4">
                         <div>Custom Message</div>
                         <div>
-                            <textarea placeholder="Type the custom message that you required" className="border" />
+                            <textarea placeholder="Type the custom message that you required" className="border"
+                                onChange={(e) => {
+                                    setCustomMessage(e.target.value)
+                                }} />
                         </div>
                     </div>
 
                     <div className="mt-4">
                         <div>Questions</div>
-                        <div><input type="text" placeholder="Question what you like" className="border mt-2" /></div>
-                        <div><input type="text" placeholder="Question what you like" className="border mt-2" /></div>
-                        <div><input type="text" placeholder="Question what you like" className="border mt-2" /></div>
+                        <div><input type="text" placeholder="Question what you like" className="border mt-2"
+                            onChange={(e) => {
+                                setAllQuestions({
+                                    ...allQuestions,
+                                    question1: e.target.value
+                                })
+                            }} />
+                        </div>
+
+                        <div><input type="text" placeholder="Question what you like" className="border mt-2"
+                            onChange={(e) => {
+                                setAllQuestions({
+                                    ...allQuestions,
+                                    question2: e.target.value
+                                })
+                            }} />
+                        </div>
+
+                        <div><input type="text" placeholder="Question what you like" className="border mt-2"
+                            onChange={(e) => {
+                                setAllQuestions({
+                                    ...allQuestions,
+                                    question3: e.target.value
+                                })
+                            }} />
+                        </div>
+                    
                     </div>
 
                     <div className="mt-4">
@@ -78,6 +126,7 @@ export function CreateSpace() {
                 </div>
 
             </div>
+            
         </div>
     )
 }
