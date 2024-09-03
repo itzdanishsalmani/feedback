@@ -16,14 +16,12 @@ model User {
 
 }
 
-model UserSpace {s
+model UserSpace {
   id              Int     @id @default(autoincrement())
   spaceName       String 
   Header          String
   Description     String
   Questions       String
-  name            String
-  email           String
   userId          Int
   user            User    @relation(fields: [userId],references: [id])
-} 
+}
