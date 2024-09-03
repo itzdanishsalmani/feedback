@@ -1,5 +1,6 @@
 import { NavBarOther } from "../UI/NavBarOther";
 import { Footer } from "../UI/Footer";
+import { useNavigate } from "react-router-dom";
 
 export function Dashboard() {
   return (
@@ -35,6 +36,7 @@ function Mid() {
 }
 
 function Space() {
+  const navigate = useNavigate()
   return (
     <div>
       <div className="mt-24 flex justify-between items-center px-24">
@@ -42,7 +44,9 @@ function Space() {
           Spaces
         </div>
         <div>
-          <button className="border">Create Space</button>
+          <button className="border" onClick={()=>{
+            navigate('/create')
+          }}>Create Space</button>
         </div>
       </div>
     </div>

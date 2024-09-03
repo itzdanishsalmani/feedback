@@ -32,16 +32,16 @@ app.post('/user', async(req,res)=>{
 })
 
 app.post('/createspace', async(req,res)=>{
-    const {userId, spaceName, Header, Description, Questions} = req.body;
-    console.log(userId, spaceName, Header, Description, Questions)
+    const {userId, spacename, title, description, questions} = req.body;
+    console.log(userId, spacename, title, description, questions)
 
     const result = await prisma.userSpace.create({
         data:{
-            spaceName:spaceName,
-            Header:Header,
-            Description:Description,
-            Questions:Questions,
-            userId:userId
+            spacename:spacename,
+            title:title,
+            description:description,
+            questions:questions,
+            userId:parseInt(userId)
         },
     })
 
