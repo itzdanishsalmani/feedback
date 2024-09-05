@@ -1,11 +1,20 @@
+require('dotenv').config()
+const SECRET_KEY = process.env.SECRET_KEY as string | undefined;
 import express from 'express'
 import cors from 'cors'
+import jsonwebtoken from 'jsonwebtoken'
+const jwt = jsonwebtoken
+import cookieParser from 'cookie-parser'
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 const app = express()
 app.use(express.json()); 
+app.use(cookieParser())
 
+if (!SECRET_KEY) {
+  throw new Error("SECRET_KEY is not defined in the environment variables");
+}
 app.use(cors())
 
 app.get('/', async(req,res)=>{
@@ -26,15 +35,23 @@ app.post('/user', async(req,res)=>{
         }
     })
 
+    const access_token = jwt.sign({id:result.id},SECRET_KEY)
+
+    const options = {
+        httpOnly:true,
+        secure:true
+    }
+
+    res.cookie("access_token", access_token, options);
+
     res.json({
-        result
-    })
-})
+      msg: "Account Created",
+    });
+  });
 
 app.post('/createspace', async(req,res)=>{
     const {userId, spacename, title, description, questions} = req.body;
     console.log(userId, spacename, title, description, questions)
-
     const result = await prisma.userSpace.create({
         data:{
             spacename:spacename,
@@ -44,7 +61,6 @@ app.post('/createspace', async(req,res)=>{
             userId:parseInt(userId)
         },
     })
-
     res.json({
         result
     })

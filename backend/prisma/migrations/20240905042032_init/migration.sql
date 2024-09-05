@@ -11,12 +11,10 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "UserSpace" (
     "id" SERIAL NOT NULL,
-    "spaceName" TEXT NOT NULL,
-    "Header" TEXT NOT NULL,
-    "Description" TEXT NOT NULL,
-    "Questions" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
+    "spacename" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "questions" JSONB[],
     "userId" INTEGER NOT NULL,
 
     CONSTRAINT "UserSpace_pkey" PRIMARY KEY ("id")

@@ -4,28 +4,34 @@ import { BlueButton } from "../UI/Button";
 
 export function CreateSpace() {
   const [spaceName, setSpaceName] = useState<string>("");
-  const [title, setTile] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
   const [customMessage, setCustomMessage] = useState<string>("");
+  const [allQuestions, setAllQuestions] = useState<string[]>([""]);
 
-  const [allQuestions, setAllQuestions] = useState<any>("");
-  //     {
-  //     question1: "Question 1",
-  //     // question2: "Question 2",
-  //     // question3: "Question 3"
-  // })
+  // Handle adding a new question input
+  function addQuestion() {
+    setAllQuestions([...allQuestions, ""]);
+  }
+
+  // Handle changing the value of a specific question
+  function handleQuestionChange(index: number, value: string) {
+    const updatedQuestions = [...allQuestions];
+    updatedQuestions[index] = value
+    setAllQuestions(updatedQuestions);
+  }
 
   async function handle() {
     const req = await axios
       .post("http://localhost:3000/createspace", {
-        userId: 2,
+        userId: 1,
         spacename: spaceName,
         title: title,
         description: customMessage,
-        questions: allQuestions,
+        questions: allQuestions, // Sending as an array of objects
       })
       .then((res) => {
         if (res.data.result) {
-          alert(res.data);
+          alert("Space created successfully!");
         } else {
           alert(res.data.err);
         }
@@ -49,14 +55,11 @@ export function CreateSpace() {
             </div>
 
             <div className="mt-4">
-              Questions comes here
-              <div>
-                {allQuestions.question1 === ""
-                  ? allQuestions.question1
-                  : allQuestions.question1}
-              </div>
-              {/* <div>{allQuestions.question2 === ''? allQuestions.question1 : allQuestions.question2}</div>
-                            <div>{allQuestions.question3 === ''? allQuestions.question1 : allQuestions.question3}</div> */}
+              <div>Questions comes here</div>
+              {allQuestions.map((question, index) => (
+                <div key={index}>{question}
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -79,9 +82,7 @@ export function CreateSpace() {
               type="text"
               placeholder="Space name"
               className="border"
-              onChange={(e) => {
-                setSpaceName(e.target.value);
-              }}
+              onChange={(e) => setSpaceName(e.target.value)}
             />
           </div>
 
@@ -94,61 +95,39 @@ export function CreateSpace() {
 
           <div className="mt-4">
             <div>Header Title</div>
-            <div>
-              <input
-                type="text"
-                placeholder="Title"
-                className="border"
-                onChange={(e) => {
-                  setTile(e.target.value);
-                }}
-              />
-            </div>
+            <input
+              type="text"
+              placeholder="Title"
+              className="border"
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </div>
 
           <div className="mt-4">
             <div>Custom Message</div>
-            <div>
-              <textarea
-                placeholder="Type the custom message that you required"
-                className="border"
-                onChange={(e) => {
-                  setCustomMessage(e.target.value);
-                }}
-              />
-            </div>
+            <textarea
+              placeholder="Type the custom message that you required"
+              className="border"
+              onChange={(e) => setCustomMessage(e.target.value)}
+            />
           </div>
 
           <div className="mt-4">
             <div>Questions</div>
-            <div>
+            {allQuestions.map((question, index) => (
+              <div className="mt-2">
               <input
+                key={index}
                 type="text"
-                placeholder="Question what you like"
+                placeholder={`Question ${index + 1}`}
                 className="border mt-2"
-                onChange={(e) => {
-                  setAllQuestions(e.target.value);
-                }}
-              />
-            </div>
-
-            {/* <div><input type="text" placeholder="Question what you like" className="border mt-2"
-                            onChange={(e) => {
-                                setAllQuestions({
-                                    ...allQuestions,
-                                    question2: e.target.value
-                                })
-                            }} />
-                        </div>
-
-                        <div><input type="text" placeholder="Question what you like" className="border mt-2"
-                            onChange={(e) => {
-                                setAllQuestions({
-                                    ...allQuestions,
-                                    question3: e.target.value
-                                })
-                            }} />
-                        </div> */}
+                value={question}
+                onChange={(e) => handleQuestionChange(index, e.target.value)}
+              /></div>
+            ))}
+            <button className="mt-2 border p-2" onClick={addQuestion}>
+              Add Question
+            </button>
           </div>
 
           <div className="mt-4">

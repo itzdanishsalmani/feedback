@@ -1,6 +1,8 @@
 import { NavBarOther } from "../UI/NavBarOther";
 import { Footer } from "../UI/Footer";
 import { useNavigate } from "react-router-dom";
+// import { useEffect, useState } from "react";
+// import axios from "axios";
 
 export function Dashboard() {
   return (
@@ -52,3 +54,14 @@ function Space() {
     </div>
   )
 }
+
+// function FetchSpace() {
+//   const[space,setSpace] = useState("")
+//   useEffect(()=>{
+//     const res = axios.get("/")
+//     .then(
+//       setSpace(res.data)
+//     )
+
+//   })
+// }

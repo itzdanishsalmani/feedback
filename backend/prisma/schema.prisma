@@ -21,7 +21,7 @@ model UserSpace {
   spacename       String 
   title           String
   description     String
-  questions       String
+  questions       String[]
   userId          Int
   user            User    @relation(fields: [userId],references: [id])
 }
