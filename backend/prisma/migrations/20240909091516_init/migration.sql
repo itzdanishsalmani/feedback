@@ -14,7 +14,7 @@ CREATE TABLE "UserSpace" (
     "spacename" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "questions" JSONB[],
+    "questions" TEXT[],
     "userId" INTEGER NOT NULL,
 
     CONSTRAINT "UserSpace_pkey" PRIMARY KEY ("id")

@@ -9,13 +9,16 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 const app = express()
-app.use(express.json()); 
+app.use(express.json())
 app.use(cookieParser())
 
 if (!SECRET_KEY) {
   throw new Error("SECRET_KEY is not defined in the environment variables");
 }
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:5173', // Frontend URL
+  credentials: true, // Allow credentials (cookies)
+}));
 
 app.get('/', async(req,res)=>{
     prisma.user.create
@@ -35,18 +38,21 @@ app.post('/user', async(req,res)=>{
         }
     })
 
-    const access_token = jwt.sign({id:result.id},SECRET_KEY)
+    const access_token = await jwt.sign({id:result.id},SECRET_KEY)
 
     const options = {
         httpOnly:true,
         secure:true
     }
 
-    res.cookie("access_token", access_token, options);
 
-    res.json({
-      msg: "Account Created",
-    });
+    return res.cookie("access_token", access_token, options)
+              .json({
+                    msg: "Account Created",
+            });
+
+
+    
   });
 
 app.post('/createspace', async(req,res)=>{

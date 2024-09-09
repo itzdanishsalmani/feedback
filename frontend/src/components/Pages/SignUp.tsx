@@ -11,14 +11,17 @@ export function SignUp() {
     if (username === "" || email === "" || password === "") {
       alert("Fields cannot be empty");
       return;
+      
     } else {
       const res = await axios.post("http://localhost:3000/user", {
         username,
         email,
         password,
-      });
-      if (res.data) {
-        alert("Sign up successfully");
+      }, { withCredentials: true });
+      
+      if (res) {
+        alert(res);
+        console.log(res)
       } else {
         alert("Something error");
       }
