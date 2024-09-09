@@ -1,16 +1,33 @@
 import { NavBarOther } from "../UI/NavBarOther";
 import { Footer } from "../UI/Footer";
 import { useNavigate } from "react-router-dom";
-// import { useEffect, useState } from "react";
-// import axios from "axios";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export function Dashboard() {
+  const[space,setSpace] = useState<string>("")
+
+  useEffect(()=>{
+    FetchSpace()
+  },[])
+
+  async function FetchSpace() {
+    const res = await axios.get("http://localhost:3000/getspace",{
+      withCredentials:true
+    })
+  
+    if(res.data){
+      console.log(res.data.spacenames)
+      setSpace(res.data.spacenames)
+    }
+  }
+ 
   return (
     <div className="bg-neutral-900">
       <div>
         <NavBarOther />
         <Mid />
-        <Space />
+        <Space space={space}/>
         <Footer />
       </div>
     </div>
@@ -37,13 +54,14 @@ function Mid() {
   );
 }
 
-function Space() {
+function Space({space}:any) {
   const navigate = useNavigate()
+
   return (
     <div>
       <div className="mt-24 flex justify-between items-center px-24">
         <div>
-          Spaces
+          {space}
         </div>
         <div>
           <button className="border" onClick={()=>{
@@ -54,14 +72,3 @@ function Space() {
     </div>
   )
 }
-
-// function FetchSpace() {
-//   const[space,setSpace] = useState("")
-//   useEffect(()=>{
-//     const res = axios.get("/")
-//     .then(
-//       setSpace(res.data)
-//     )
-
-//   })
-// }

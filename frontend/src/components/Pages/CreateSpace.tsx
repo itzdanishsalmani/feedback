@@ -23,11 +23,12 @@ export function CreateSpace() {
   async function handle() {
     const req = await axios
       .post("http://localhost:3000/createspace", {
-        userId: 1,
         spacename: spaceName,
         title: title,
         description: customMessage,
         questions: allQuestions, // Sending as an array of objects
+      },{
+        withCredentials:true
       })
       .then((res) => {
         if (res.data.result) {
