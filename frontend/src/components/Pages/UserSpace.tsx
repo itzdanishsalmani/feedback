@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BlueButton } from "../UI/Button";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 export function UserSpace() {
   const [showPopup, setShowPopup] = useState<boolean>(false);
@@ -8,9 +9,10 @@ export function UserSpace() {
     const [review,setReview] = useState<string>("")
     const [email,setEmail] = useState<string>("")
     const [name,setName] = useState<string>("")
+    const { spacename,id } = useParams();
 
     async function request() {
-      const res = await axios.post('http://localhost:3000/review',{
+      const res = await axios.post(`http://localhost:3000/review/${spacename}/${id}`,{
             review:review,
             email:email,
             name:name,

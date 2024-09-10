@@ -1,5 +1,6 @@
 require("dotenv").config();
 const SECRET_KEY = process.env.SECRET_KEY as string | undefined;
+import { authMiddleware } from "./auth";
 import express from "express";
 import cors from "cors";
 import jsonwebtoken from "jsonwebtoken";
@@ -7,7 +8,6 @@ const jwt = jsonwebtoken;
 import cookieParser from "cookie-parser";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-import { JwtPayload } from 'jsonwebtoken';
 
 const app = express();
 app.use(express.json());
@@ -23,10 +23,6 @@ app.use(
   })
 );
 
-interface MyJwtPayload extends JwtPayload {
-    id: number;
-  }
-  
 app.get("/", async (req, res) => {
   prisma.user.create;
   res.send("server is running");
@@ -45,7 +41,7 @@ app.post("/user", async (req, res) => {
     },
   });
 
-  const access_token = await jwt.sign({ id: result.id }, SECRET_KEY);
+  const access_token = await jwt.sign({ id: result.id,username:result.username }, SECRET_KEY);
 
   const options = {
     httpOnly: true,
@@ -57,54 +53,36 @@ app.post("/user", async (req, res) => {
   });
 });
 
-app.get("/getspace",async(req,res)=>{
-    const token = req.cookies.access_token 
+app.get("/getspace", authMiddleware, async (req, res) => {
+  const userId = req.body.user.id;
+  console.log(userId)
 
-    if(!token){
-        return res.json({
-            err:"Unauthorize"
-        })
-    }
-
-    const decodedvalue = jwt.verify(token, SECRET_KEY) as MyJwtPayload; // Cast to custom type
-
-    const userId = decodedvalue.id
-
-    const userWithSpaces = await prisma.user.findUnique({
-        where: {
-          id: userId,
-        },
+  const userWithSpaces = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      userspace: {
         select: {
-          userspace: {
-            select: {
-              spacename: true,
-            },
-          },
+          spacename: true,
+          userId:true,
         },
-      });
-    
-      if (!userWithSpaces || !userWithSpaces.userspace) {
-        return res.status(404).json({ err: "No spaces found" });
-      }
-    
-      // Extract the spacenames from the userspace array
-      const spacenames = userWithSpaces.userspace.map(space => space.spacename);
-    
-      return res.json({ spacenames });
-    });
-    
-app.post("/createspace", async (req, res) => {
-    const token = req.cookies.access_token 
+      },
+    },
+  });
 
-    if(!token){
-        return res.json({
-            err:"Unauthorize"
-        })
-    }
+  if (!userWithSpaces || !userWithSpaces.userspace) {
+    return res.status(404).json({ err: "No spaces found" });
+  }
 
-    const decodedvalue = jwt.verify(token, SECRET_KEY) as MyJwtPayload; // Cast to custom type
+  // Extract the spacenames from the userspace array
+  const spacenames = userWithSpaces.userspace.map((space) => space.spacename);
 
-    const userId = decodedvalue.id
+  return res.json({ spacenames,userId });
+});
+
+app.post("/createspace", authMiddleware, async (req, res) => {
+  const userId = req.body.user.id;
 
   const { spacename, title, description, questions } = req.body;
   console.log(userId, spacename, title, description, questions);
@@ -122,39 +100,28 @@ app.post("/createspace", async (req, res) => {
   });
 });
 
-app.post('/review',async(req,res)=>{
-  const token = req.cookies.access_token 
+app.post("/review/:spacename/:id", async (req, res) => {
+  const userId = req.params.id;
 
-    if(!token){
-        return res.json({
-            err:"Unauthorize"
-        })
-    }
+  const { review, stars, name, email } = req.body;
 
-    const decodedvalue = jwt.verify(token, SECRET_KEY) as MyJwtPayload; // Cast to custom type
+  console.log({ review, stars, name, email });
 
-    const userId = decodedvalue.id
+  const reviews = await prisma.review.create({
+    data: {
+      review: review,
+      stars: stars,
+      name: name,
+      email: email,
+      userId: parseInt(userId),
+    },
+  });
 
-    const {review,stars,name,email} = req.body
-
-    console.log({review,stars,name,email})
-
-    const reviews = await prisma.review.create({
-
-      data:{
-        review:review,
-        stars:stars,
-        name:name,
-        email:email,
-        userId:userId
-      }
-    })
-
-    return res.json({
-      reviews,
-      msg:"created"
-    })
-})
+  return res.json({
+    reviews,
+    msg: "created",
+  });
+});
 
 app.listen(3000, () => {
   console.log("server is running at port 3000");

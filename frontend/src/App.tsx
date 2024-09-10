@@ -7,10 +7,12 @@ import { CreateSpace } from './components/Pages/CreateSpace';
 import { useEffect,useState } from 'react';
 import axios from 'axios';
 import { UserSpace } from './components/Pages/UserSpace';
+import { Summary } from './components/Pages/Summary';
 
 function App() {
 
   const[space,setSpace] = useState<string>("")
+  const [ userId,setUserId] = useState<string>("")
 
   useEffect(()=>{
     FetchSpace()
@@ -22,8 +24,9 @@ function App() {
     })
   
     if(res.data){
-      console.log(res.data.spacenames)
+      console.log(res.data)
       setSpace(res.data.spacenames)
+      setUserId(res.data.userId)
     }
   }
   
@@ -35,7 +38,8 @@ function App() {
           <Route path='/signup' element={ <SignUp /> } />
           <Route path='/dashboard' element={ <Dashboard /> } />
           <Route path='/create' element={ <CreateSpace /> } />
-          <Route path='/space' element={ <UserSpace /> } />
+          <Route path='/summary' element={ <Summary/> } />
+          <Route path={`/${space}/${userId}`} element={ <UserSpace /> } />
         </Routes>
       </BrowserRouter>
       </div>  
