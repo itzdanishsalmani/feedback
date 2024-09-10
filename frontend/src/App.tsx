@@ -35,7 +35,7 @@ function App() {
           <Route path='/signup' element={ <SignUp /> } />
           <Route path='/dashboard' element={ <Dashboard /> } />
           <Route path='/create' element={ <CreateSpace /> } />
-          <Route path={`/${space}`} element={ <UserSpace /> } />
+          <Route path='/space' element={ <UserSpace /> } />
         </Routes>
       </BrowserRouter>
       </div>  

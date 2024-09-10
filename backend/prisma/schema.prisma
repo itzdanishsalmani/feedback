@@ -13,6 +13,7 @@ model User {
   email     String
   password  String 
   userspace UserSpace[]
+  review    Review[]
 
 }
 
@@ -24,4 +25,14 @@ model UserSpace {
   questions       String[]
   userId          Int
   user            User    @relation(fields: [userId],references: [id])
+}
+
+model Review {
+  id            Int     @id @default(autoincrement())
+  review        String
+  name          String
+  email         String
+  stars         Int
+  userId        Int
+  user          User    @relation(fields: [userId],references: [id])
 }

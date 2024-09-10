@@ -122,6 +122,40 @@ app.post("/createspace", async (req, res) => {
   });
 });
 
+app.post('/review',async(req,res)=>{
+  const token = req.cookies.access_token 
+
+    if(!token){
+        return res.json({
+            err:"Unauthorize"
+        })
+    }
+
+    const decodedvalue = jwt.verify(token, SECRET_KEY) as MyJwtPayload; // Cast to custom type
+
+    const userId = decodedvalue.id
+
+    const {review,stars,name,email} = req.body
+
+    console.log({review,stars,name,email})
+
+    const reviews = await prisma.review.create({
+
+      data:{
+        review:review,
+        stars:stars,
+        name:name,
+        email:email,
+        userId:userId
+      }
+    })
+
+    return res.json({
+      reviews,
+      msg:"created"
+    })
+})
+
 app.listen(3000, () => {
   console.log("server is running at port 3000");
 });
