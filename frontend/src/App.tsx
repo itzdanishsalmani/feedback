@@ -2,34 +2,28 @@ import { BrowserRouter, Routes,Route } from 'react-router-dom';
 import { LandingPage } from './components/Pages/LandingPage';
 import { SignUp } from './components/Pages/SignUp';
 import { Dashboard } from './components/Pages/Dashboard'
-import './index.css';
 import { CreateSpace } from './components/Pages/CreateSpace';
 import { useEffect,useState } from 'react';
-import axios from 'axios';
 import { UserSpace } from './components/Pages/UserSpace';
 import { Summary } from './components/Pages/Summary';
+import './index.css';
+import { FetchSpace } from './Utils/FetchSpace';
 
 function App() {
 
-  const[space,setSpace] = useState<string>("")
+  const [space,setSpace] = useState<string>("")
   const [ userId,setUserId] = useState<string>("")
 
-  useEffect(()=>{
-    FetchSpace()
-  },[])
-
-  async function FetchSpace() {
-    const res = await axios.get("http://localhost:3000/getspace",{
-      withCredentials:true
-    })
-  
-    if(res.data){
-      console.log(res.data)
-      setSpace(res.data.spacenames)
-      setUserId(res.data.userId)
+  useEffect(() => {
+    async function getData() {
+      const { space, userId } = await FetchSpace(); 
+      setSpace(space);
+      setUserId(userId);
     }
-  }
-  
+
+    getData();
+  }, []);
+
   return (
     <div>
       <BrowserRouter>
@@ -39,7 +33,11 @@ function App() {
           <Route path='/dashboard' element={ <Dashboard /> } />
           <Route path='/create' element={ <CreateSpace /> } />
           <Route path='/summary' element={ <Summary/> } />
-          <Route path={`/${space}/${userId}`} element={ <UserSpace /> } />
+            
+            {(space && userId) &&
+              <Route path={`${space}${userId}`} element={ <UserSpace /> } />
+            }
+
         </Routes>
       </BrowserRouter>
       </div>  

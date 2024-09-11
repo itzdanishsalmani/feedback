@@ -53,13 +53,14 @@ app.post("/user", async (req, res) => {
   });
 });
 
-app.get("/getspace", authMiddleware, async (req, res) => {
-  const userId = req.body.user.id;
+app.get("/getspace/:userId", async (req, res) => {
+  console.log("hello")
+  const userId = req.params.userId;
   console.log(userId)
 
   const userWithSpaces = await prisma.user.findUnique({
     where: {
-      id: userId,
+      id: parseInt(userId),
     },
     select: {
       userspace: {
@@ -100,17 +101,15 @@ app.post("/createspace", authMiddleware, async (req, res) => {
   });
 });
 
-app.post("/review/:spacename/:id", async (req, res) => {
-  const userId = req.params.id;
+app.post("/review", async (req, res) => {
+  const { review, stars, name, email,userId } = req.body;
 
-  const { review, stars, name, email } = req.body;
-
-  console.log({ review, stars, name, email });
+  console.log({ review, stars, name, email, userId });
 
   const reviews = await prisma.review.create({
     data: {
       review: review,
-      stars: stars,
+      stars: parseInt(stars),
       name: name,
       email: email,
       userId: parseInt(userId),
@@ -123,6 +122,7 @@ app.post("/review/:spacename/:id", async (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log("server is running at port 3000");
+const port = 3000
+app.listen(port, () => {
+  console.log(`server is running at port ${port}`);
 });
