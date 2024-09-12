@@ -1,8 +1,7 @@
 import axios from "axios"
 
 export async function FetchSpace() {
-  const userId = 1;
-    const res = await axios.get(`http://localhost:3000/getspace/${userId}`,{
+    const res = await axios.get(`http://localhost:3000/getspace`,{
       withCredentials:true
     })
     if(res.data)

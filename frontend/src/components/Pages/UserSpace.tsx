@@ -1,6 +1,7 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { BlueButton } from "../UI/Button";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 export function UserSpace() {
   const [showPopup, setShowPopup] = useState<boolean>(false);
@@ -9,12 +10,15 @@ export function UserSpace() {
     const [email,setEmail] = useState<string>("")
     const [name,setName] = useState<string>("")
 
+    const {spacename} =  useParams()
+
     async function request() {
       const res = await axios.post(`http://localhost:3000/review`,{
             review:review,
             email:email,
             name:name,
-            stars:3
+            stars:3,
+            spacename:spacename
         },{
             withCredentials:true
         })
@@ -115,3 +119,7 @@ export function UserSpace() {
   );
 }
 
+// async function getPublicSpace() {
+//   await axios.get(`http://localhost:3000/publicspacename/${space}`)
+//   if(res.data.)
+// }

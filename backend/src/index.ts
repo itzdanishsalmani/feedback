@@ -53,9 +53,8 @@ app.post("/user", async (req, res) => {
   });
 });
 
-app.get("/getspace/:userId", async (req, res) => {
-  console.log("hello")
-  const userId = req.params.userId;
+app.get("/getspace",authMiddleware, async (req, res) => {
+  const userId = req.body.user.id
   console.log(userId)
 
   const userWithSpaces = await prisma.user.findUnique({
@@ -82,6 +81,18 @@ app.get("/getspace/:userId", async (req, res) => {
   return res.json({ spacenames,userId });
 });
 
+app.get("/publicspacename/:space", async (req, res) => {
+  const spacename = req.params.space
+
+  const userWithSpaces = await prisma.userSpace.findFirst({
+    where:{
+      spacename: spacename,
+    }
+    });
+
+  return res.json({ userWithSpaces});
+});
+
 app.post("/createspace", authMiddleware, async (req, res) => {
   const userId = req.body.user.id;
 
@@ -102,22 +113,45 @@ app.post("/createspace", authMiddleware, async (req, res) => {
 });
 
 app.post("/review", async (req, res) => {
-  const { review, stars, name, email,userId } = req.body;
+  const { review, stars, name, email,spacename } = req.body;
 
-  console.log({ review, stars, name, email, userId });
+  console.log({ review, stars, name, email, spacename });
+  
+  const user = await prisma.userSpace.findFirst({
+    where:{
+      spacename:spacename,
+    },
+    select:{
+      userId:true
+    }
+  })
 
-  const reviews = await prisma.review.create({
+  if(!user) {
+    return res.json({
+      err:"user not found"
+    })
+  }
+
+  const userId = user?.userId 
+
+  if(!userId){
+    return res.json({
+      err:"error"
+    })
+  }
+  
+  const newReviews = await prisma.review.create({
     data: {
       review: review,
       stars: parseInt(stars),
       name: name,
       email: email,
-      userId: parseInt(userId),
+      userId:userId
     },
   });
 
   return res.json({
-    reviews,
+    newReviews,
     msg: "created",
   });
 });

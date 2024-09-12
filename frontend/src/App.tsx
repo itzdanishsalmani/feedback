@@ -20,7 +20,6 @@ function App() {
       setSpace(space);
       setUserId(userId);
     }
-
     getData();
   }, []);
 
@@ -28,17 +27,16 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
+
           <Route path='/' element={ <LandingPage/> } />
           <Route path='/signup' element={ <SignUp /> } />
           <Route path='/dashboard' element={ <Dashboard /> } />
           <Route path='/create' element={ <CreateSpace /> } />
           <Route path='/summary' element={ <Summary/> } />
-            
-            {(space && userId) &&
-              <Route path={`${space}${userId}`} element={ <UserSpace /> } />
-            }
+          
+          <Route path='/:space' element={ <UserSpace /> } />
 
-        </Routes>
+          </Routes>
       </BrowserRouter>
       </div>  
   )
