@@ -18,7 +18,7 @@ if (!SECRET_KEY) {
 }
 app.use(
   cors({
-    origin: "http://localhost:5173", // Frontend URL
+    origin: "*", // Frontend URL
     credentials: true, // Allow credentials (cookies)
   })
 );
@@ -28,32 +28,60 @@ app.get("/", async (req, res) => {
   res.send("server is running");
 });
 
-app.post("/user", async (req, res) => {
+app.post("/signup", async (req, res) => {
+
   const { username, email, password } = req.body;
+
+  if(!username || !email || !password){
+    return res.status(404).json({
+      error:"Fields cannot be empty"
+    })
+  }
 
   console.log(username, email, password);
 
-  const result = await prisma.user.create({
-    data: {
-      username: username,
-      email: email,
-      password: password,
-    },
-  });
+  try {
 
-  const access_token = await jwt.sign(
-    { id: result.id, username: result.username },
-    SECRET_KEY
-  );
+    const userExist = await prisma.user.findMany({
+      where:{
+        username:username,
+        email:email
+      }
+    })
 
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
+    if(userExist){
+      return res.status(411).json({
+        error:"User Already Exist"
+      })
+    }
 
-  return res.status(200).cookie("access_token", access_token, options).json({
-    msg: "Account Created",
-  });
+    const user = await prisma.user.create({
+      data: {
+        username: username,
+        email: email,
+        password: password,
+      },
+    });
+  
+    const access_token = await jwt.sign(
+      { id: user.id, username: user.username },
+      SECRET_KEY
+    );
+  
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+  
+    return res.status(200).cookie("access_token", access_token, options).json({
+      message: "User Created Successfully!",
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      error:"Server error"
+    })
+  }
 });
 
 app.get("/getspace", authMiddleware, async (req, res) => {
@@ -75,7 +103,7 @@ app.get("/getspace", authMiddleware, async (req, res) => {
   });
 
   if (!userWithSpaces || !userWithSpaces.userspace) {
-    return res.status(404).json({ err: "No spaces found" });
+    return res.status(404).json({ error: "Spacename not found" });
   }
 
   // Extract the spacenames from the userspace array
@@ -85,46 +113,94 @@ app.get("/getspace", authMiddleware, async (req, res) => {
 });
 
 app.get("/publicspacename/:space", async (req, res) => {
-  const spacename = req.params.space;
-  console.log(spacename);
-  const userWithSpaces = await prisma.userSpace.findFirst({
-    where: {
-      spacename: spacename,
-    },
-  });
 
-  if (!userWithSpaces) {
-    return res.json({
-      err: "Spacename doesn't exist",
-    });
+  const spacename = req.params.space;
+
+  if(!spacename){
+    return res.status(404).json({
+      error:"Spacename is required"
+    })
   }
 
-  return res.json({ userWithSpaces, msg: "Finded" });
+  console.log(spacename);
+
+  try {
+    const userWithSpacename = await prisma.userSpace.findFirst({
+      where: {
+        spacename: spacename,
+      },
+    });
+  
+    if (!userWithSpacename) {
+      return res.status(404).json({
+        error: "Spacename doesn't exist",
+      });
+    }
+  
+    return res.status(200).json({ 
+      userWithSpacename,
+      message: "Spacename is retrieved" 
+    });
+
+  } catch (error) {
+
+    return res.status(500).json({
+      error:"Server error"
+    })
+  }
+  
 });
 
 app.post("/createspace", authMiddleware, async (req, res) => {
   const userId = req.body.user.id;
 
   const { spacename, title, description, questions } = req.body;
+
+  if(!spacename || !title || !description || !questions){
+    return res.status(404).json({
+      error:"Fields are required"
+    })
+  }
+
   console.log(userId, spacename, title, description, questions);
-  const result = await prisma.userSpace.create({
-    data: {
-      spacename: spacename,
-      title: title,
-      description: description,
-      questions: questions,
-      userId: userId,
-    },
-  });
-  res.json({
-    result,
-  });
+
+  try {
+
+    const space = await prisma.userSpace.create({
+      data: {
+        spacename: spacename,
+        title: title,
+        description: description,
+        questions: questions,
+        userId: userId,
+      },
+    });
+
+    return res.status(200).json({
+      space,
+      message:"Space created successfully!"
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message:"Server error"
+    })
+  }
+
 });
 
 app.post("/review", async (req, res) => {
   const { review, stars, name, email, spacename } = req.body;
 
+  if(!review || !stars || !name || !email || !spacename){
+    return res.status(404).json({
+      error:"Fields are required"
+    })
+  }
+
   console.log({ review, stars, name, email, spacename });
+  
+try {
 
   const user = await prisma.userSpace.findFirst({
     where: {
@@ -136,18 +212,12 @@ app.post("/review", async (req, res) => {
   });
 
   if (!user) {
-    return res.json({
-      err: "user not found",
+    return res.status(404).json({
+      error: "User not found",
     });
   }
 
   const userId = user?.userId;
-
-  if (!userId) {
-    return res.json({
-      err: "error",
-    });
-  }
 
   const newReviews = await prisma.review.create({
     data: {
@@ -159,10 +229,18 @@ app.post("/review", async (req, res) => {
     },
   });
 
-  return res.json({
+  return res.status(200).json({
     newReviews,
-    msg: "created",
+    msg: "Testimonial created successfully",
   });
+
+} catch (error) {
+
+  return res.status(500).json({
+    error:"Server error"
+  })
+}
+
 });
 
 const port = 3000;
