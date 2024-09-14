@@ -1,45 +1,28 @@
-import { BrowserRouter, Routes,Route } from 'react-router-dom';
-import { LandingPage } from './components/Pages/LandingPage';
-import { SignUp } from './components/Pages/SignUp';
-import { Dashboard } from './components/Pages/Dashboard'
-import { CreateSpace } from './components/Pages/CreateSpace';
-import { useEffect,useState } from 'react';
-import { UserSpace } from './components/Pages/UserSpace';
-import { Summary } from './components/Pages/Summary';
-import './index.css';
-import { FetchSpace } from './Utils/FetchSpace';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { LandingPage } from "./components/Pages/LandingPage";
+import { SignUp } from "./components/Pages/SignUp";
+import { Dashboard } from "./components/Pages/Dashboard";
+import { CreateSpace } from "./components/Pages/CreateSpace";
+import { UserSpace } from "./components/Pages/UserSpace";
+import { Summary } from "./components/Pages/Summary";
+import "./index.css";
 
 function App() {
-
-  const [space,setSpace] = useState<string>("")
-  const [ userId,setUserId] = useState<string>("")
-
-  useEffect(() => {
-    async function getData() {
-      const { space, userId } = await FetchSpace(); 
-      setSpace(space);
-      setUserId(userId);
-    }
-    getData();
-  }, []);
-
   return (
     <div>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/create" element={<CreateSpace />} />
+          <Route path="/summary" element={<Summary />} />
 
-          <Route path='/' element={ <LandingPage/> } />
-          <Route path='/signup' element={ <SignUp /> } />
-          <Route path='/dashboard' element={ <Dashboard /> } />
-          <Route path='/create' element={ <CreateSpace /> } />
-          <Route path='/summary' element={ <Summary/> } />
-          
-          <Route path='/:space' element={ <UserSpace /> } />
-
-          </Routes>
+          <Route path="/:spacename" element={<UserSpace />} />
+        </Routes>
       </BrowserRouter>
-      </div>  
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;

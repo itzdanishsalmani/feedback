@@ -1,31 +1,32 @@
 require("dotenv").config();
-import { Request,Response,NextFunction } from 'express';
-import jsonwebtoken,{ JwtPayload } from 'jsonwebtoken';
-const SECRET_KEY = process.env.SECRET_KEY as string ;
+import { Request, Response, NextFunction } from "express";
+import jsonwebtoken, { JwtPayload } from "jsonwebtoken";
+const SECRET_KEY = process.env.SECRET_KEY as string;
 const jwt = jsonwebtoken;
 
 interface MyJwtPayload extends JwtPayload {
-    id: number;
-  }
-
-if(!SECRET_KEY){
-    throw new Error("Secret key is required");
-    
+  id: number;
 }
 
-export async function authMiddleware(req:Request,res:Response,next:NextFunction) {
+if (!SECRET_KEY) {
+  throw new Error("Secret key is required");
+}
 
-    const token = req.cookies.access_token 
+export async function authMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const token = req.cookies.access_token;
 
-    if(!token){
-        return res.json({
-            err:"Unauthorize"
-        })
-    }
+  if (!token) {
+    return res.json({
+      err: "Unauthorize",
+    });
+  }
 
-        const decodedValue = jwt.verify(token, SECRET_KEY) as MyJwtPayload
+  const decodedValue = jwt.verify(token, SECRET_KEY) as MyJwtPayload;
 
-    req.body.user = decodedValue
-    next()
-
+  req.body.user = decodedValue;
+  next();
 }

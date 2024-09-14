@@ -41,7 +41,10 @@ app.post("/user", async (req, res) => {
     },
   });
 
-  const access_token = await jwt.sign({ id: result.id,username:result.username }, SECRET_KEY);
+  const access_token = await jwt.sign(
+    { id: result.id, username: result.username },
+    SECRET_KEY
+  );
 
   const options = {
     httpOnly: true,
@@ -53,9 +56,9 @@ app.post("/user", async (req, res) => {
   });
 });
 
-app.get("/getspace",authMiddleware, async (req, res) => {
-  const userId = req.body.user.id
-  console.log(userId)
+app.get("/getspace", authMiddleware, async (req, res) => {
+  const userId = req.body.user.id;
+  console.log(userId);
 
   const userWithSpaces = await prisma.user.findUnique({
     where: {
@@ -65,7 +68,7 @@ app.get("/getspace",authMiddleware, async (req, res) => {
       userspace: {
         select: {
           spacename: true,
-          userId:true,
+          userId: true,
         },
       },
     },
@@ -78,19 +81,25 @@ app.get("/getspace",authMiddleware, async (req, res) => {
   // Extract the spacenames from the userspace array
   const spacenames = userWithSpaces.userspace.map((space) => space.spacename);
 
-  return res.json({ spacenames,userId });
+  return res.json({ spacenames, userId });
 });
 
 app.get("/publicspacename/:space", async (req, res) => {
-  const spacename = req.params.space
-
+  const spacename = req.params.space;
+  console.log(spacename);
   const userWithSpaces = await prisma.userSpace.findFirst({
-    where:{
+    where: {
       spacename: spacename,
-    }
-    });
+    },
+  });
 
-  return res.json({ userWithSpaces});
+  if (!userWithSpaces) {
+    return res.json({
+      err: "Spacename doesn't exist",
+    });
+  }
+
+  return res.json({ userWithSpaces, msg: "Finded" });
 });
 
 app.post("/createspace", authMiddleware, async (req, res) => {
@@ -113,40 +122,40 @@ app.post("/createspace", authMiddleware, async (req, res) => {
 });
 
 app.post("/review", async (req, res) => {
-  const { review, stars, name, email,spacename } = req.body;
+  const { review, stars, name, email, spacename } = req.body;
 
   console.log({ review, stars, name, email, spacename });
-  
+
   const user = await prisma.userSpace.findFirst({
-    where:{
-      spacename:spacename,
+    where: {
+      spacename: spacename,
     },
-    select:{
-      userId:true
-    }
-  })
+    select: {
+      userId: true,
+    },
+  });
 
-  if(!user) {
+  if (!user) {
     return res.json({
-      err:"user not found"
-    })
+      err: "user not found",
+    });
   }
 
-  const userId = user?.userId 
+  const userId = user?.userId;
 
-  if(!userId){
+  if (!userId) {
     return res.json({
-      err:"error"
-    })
+      err: "error",
+    });
   }
-  
+
   const newReviews = await prisma.review.create({
     data: {
       review: review,
       stars: parseInt(stars),
       name: name,
       email: email,
-      userId:userId
+      userId: userId,
     },
   });
 
@@ -156,7 +165,7 @@ app.post("/review", async (req, res) => {
   });
 });
 
-const port = 3000
+const port = 3000;
 app.listen(port, () => {
   console.log(`server is running at port ${port}`);
 });

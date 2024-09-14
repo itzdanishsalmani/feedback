@@ -1,33 +1,61 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BlueButton } from "../UI/Button";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
 export function UserSpace() {
+  const { spacename } = useParams();
   const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [review, setReview] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [spaceNotFound, setSpaceNotFound] = useState<boolean>(false); // New state for space validity
 
-    const [review,setReview] = useState<string>("")
-    const [email,setEmail] = useState<string>("")
-    const [name,setName] = useState<string>("")
-
-    const {spacename} =  useParams()
-
-    async function request() {
-      const res = await axios.post(`http://localhost:3000/review`,{
-            review:review,
-            email:email,
-            name:name,
-            stars:3,
-            spacename:spacename
-        },{
-            withCredentials:true
-        })
-        console.log(res)
-        if(res.data){
-            console.log(res.data)
-            alert("send successfully")
+  useEffect(() => {
+    async function check() {
+      try {
+        const res = await axios.get(
+          `http://localhost:3000/publicspacename/${spacename}`
+        );
+        if (res.data.err) {
+          setSpaceNotFound(true); // Set spaceNotFound to true if there is an error
         }
+      } catch (error) {
+        console.error("API call failed:", error);
+        setSpaceNotFound(true); // Set spaceNotFound to true in case of error
+      }
     }
+
+    check();
+  }, [spacename]);
+
+  async function request() {
+    const res = await axios.post(
+      `http://localhost:3000/review`,
+      {
+        review: review,
+        email: email,
+        name: name,
+        stars: 3,
+        spacename: spacename,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    if (res.data) {
+      console.log(res.data);
+      alert("send successfully");
+    }
+  }
+
+  if (spaceNotFound) {
+    return (
+      <div className="bg-black h-screen flex items-center justify-center text-white">
+        <h1 className="text-4xl font-bold">PAGE NOT FOUND</h1>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-black h-screen relative">
@@ -55,8 +83,8 @@ export function UserSpace() {
                 <textarea
                   className="w-full p-2 border rounded"
                   placeholder="Write review here"
-                  onChange={(e)=>{
-                    setReview(e.target.value)
+                  onChange={(e) => {
+                    setReview(e.target.value);
                   }}
                 />
               </div>
@@ -67,8 +95,8 @@ export function UserSpace() {
                   className="w-full p-2 border rounded"
                   placeholder="Your Name"
                   required
-                  onChange={(e)=>{
-                    setEmail(e.target.value)
+                  onChange={(e) => {
+                    setEmail(e.target.value);
                   }}
                 />
               </div>
@@ -79,8 +107,8 @@ export function UserSpace() {
                   className="w-full p-2 border rounded"
                   placeholder="Your Email"
                   required
-                  onChange={(e)=>{
-                    setName(e.target.value)
+                  onChange={(e) => {
+                    setName(e.target.value);
                   }}
                 />
               </div>
