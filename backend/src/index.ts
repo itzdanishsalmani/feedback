@@ -7,6 +7,7 @@ import jsonwebtoken from "jsonwebtoken";
 const jwt = jsonwebtoken;
 import cookieParser from "cookie-parser";
 import { PrismaClient } from "@prisma/client";
+import bcrypt, { hash } from "bcrypt"
 const prisma = new PrismaClient();
 
 const app = express();
@@ -18,7 +19,7 @@ if (!SECRET_KEY) {
 }
 app.use(
   cors({
-    origin: "*", // Frontend URL
+    origin: "*", 
     credentials: true, // Allow credentials (cookies)
   })
 );
@@ -38,7 +39,9 @@ app.post("/signup", async (req, res) => {
     })
   }
 
-  console.log(username, email, password);
+  const encryptedPassword = await bcrypt.hash(password,10)
+
+  console.log(username, email, encryptedPassword);
 
   try {
 
@@ -59,12 +62,12 @@ app.post("/signup", async (req, res) => {
       data: {
         username: username,
         email: email,
-        password: password,
+        password: encryptedPassword,
       },
     });
   
     const access_token = await jwt.sign(
-      { id: user.id, username: user.username },
+      { id: user.id, email: user.email },
       SECRET_KEY
     );
   
@@ -77,6 +80,58 @@ app.post("/signup", async (req, res) => {
       message: "User Created Successfully!",
     });
 
+  } catch (error) {
+    return res.status(500).json({
+      error:"Server error"
+    })
+  }
+});
+
+app.post("/signin", async (req, res) => {
+
+  const { email, password } = req.body;
+
+  if(!email || !password){
+    return res.status(404).json({
+      error:"Fields cannot be empty"
+    })
+  }
+
+  const encryptedPassword = bcrypt.hash(password,10)
+
+  console.log(email, encryptedPassword);
+
+  try {
+
+    const userExist = await prisma.user.findFirst({
+      where:{
+        email:email,
+      
+      }
+    })
+
+    if(!userExist){
+      return res.status(404).json({
+        error:"User not found"
+      })
+    }
+  
+    if(userExist) {
+      const access_token = await jwt.sign(
+        { id: userExist.id, email: userExist.email },
+        SECRET_KEY
+      );
+    
+      const options = {
+        httpOnly: true,
+        secure: true,
+      };
+    
+      return res.status(200).cookie("access_token", access_token, options).json({
+        message: "Signin successfully!",
+      });
+    }
+    
   } catch (error) {
     return res.status(500).json({
       error:"Server error"
