@@ -45,10 +45,12 @@ app.post("/signup", async (req, res) => {
 
   try {
 
-    const userExist = await prisma.user.findMany({
+    const userExist = await prisma.user.findFirst({
       where:{
-        username:username,
-        email:email
+        OR: [
+          { username: username },
+          { email: email }
+        ]
       }
     })
 
@@ -78,6 +80,7 @@ app.post("/signup", async (req, res) => {
   
     return res.status(200).cookie("access_token", access_token, options).json({
       message: "User Created Successfully!",
+      user
     });
 
   } catch (error) {
@@ -96,17 +99,14 @@ app.post("/signin", async (req, res) => {
       error:"Fields cannot be empty"
     })
   }
-
-  const encryptedPassword = bcrypt.hash(password,10)
-
-  console.log(email, encryptedPassword);
+  
+  console.log(email, password);
 
   try {
 
     const userExist = await prisma.user.findFirst({
       where:{
         email:email,
-      
       }
     })
 
@@ -114,6 +114,14 @@ app.post("/signin", async (req, res) => {
       return res.status(404).json({
         error:"User not found"
       })
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, userExist.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        error: "Invalid password",
+      });
     }
   
     if(userExist) {
@@ -128,7 +136,7 @@ app.post("/signin", async (req, res) => {
       };
     
       return res.status(200).cookie("access_token", access_token, options).json({
-        message: "Signin successfully!",
+        message: "Signin successfully!"
       });
     }
     
