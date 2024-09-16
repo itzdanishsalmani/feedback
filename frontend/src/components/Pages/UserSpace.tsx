@@ -9,7 +9,7 @@ export function UserSpace() {
   const [review, setReview] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
-  const [spaceNotFound, setSpaceNotFound] = useState<boolean>(false); // New state for space validity
+  const [spaceNotFound, setSpaceNotFound] = useState<boolean>(false);
 
   useEffect(() => {
     async function check() {
@@ -17,12 +17,12 @@ export function UserSpace() {
         const res = await axios.get(
           `http://localhost:3000/publicspacename/${spacename}`
         );
-        if (res.data.err) {
-          setSpaceNotFound(true); // Set spaceNotFound to true if there is an error
+        if (res.data.error) {
+          setSpaceNotFound(true); 
         }
       } catch (error) {
         console.error("API call failed:", error);
-        setSpaceNotFound(true); // Set spaceNotFound to true in case of error
+        setSpaceNotFound(true); 
       }
     }
 
@@ -40,7 +40,7 @@ export function UserSpace() {
         spacename: spacename,
       },
       {
-        withCredentials: true,
+        withCredentials: true,  
       }
     );
     if (res.data) {
@@ -146,8 +146,3 @@ export function UserSpace() {
     </div>
   );
 }
-
-// async function getPublicSpace() {
-//   await axios.get(`http://localhost:3000/publicspacename/${space}`)
-//   if(res.data.)
-// }

@@ -20,8 +20,8 @@ export async function authMiddleware(
   const token = req.cookies.access_token;
 
   if (!token) {
-    return res.json({
-      err: "Unauthorize",
+    return res.status(401).json({
+      error: "Invalid token",
     });
   }
 

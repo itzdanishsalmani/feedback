@@ -10,7 +10,13 @@ export function CreateSpace() {
 
   // Handle adding a new question input
   function addQuestion() {
-    setAllQuestions([...allQuestions, ""]);
+    
+    if(allQuestions.length<3){
+      setAllQuestions([...allQuestions, ""]);
+    }else{
+      alert("max count is 3")
+    }
+
   }
 
   // Handle changing the value of a specific question
@@ -21,7 +27,7 @@ export function CreateSpace() {
   }
 
   async function handle() {
-    const req = await axios
+    const res = await axios
       .post("http://localhost:3000/createspace", {
         spacename: spaceName,
         title: title,
@@ -30,37 +36,43 @@ export function CreateSpace() {
       },{
         withCredentials:true
       })
-      .then((res) => {
-        if (res.data.result) {
-          alert("Space created successfully!");
+        if (res.data.message) {
+          alert(res.data.message);
         } else {
-          alert(res.data.err);
+          alert(res.data.error);
         }
-      });
   }
 
   return (
     <div className="max-w-[1200px] mx-auto text-gray-800">
       <div className="grid grid-cols-1 md:grid-cols-12">
-        <div className="col-span-5 md:px-12 mt-12 border">
+        <div className="preview col-span-5 md:px-12 mt-12 border rounded-lg h-fit pb-12 w-full">
           <div className="flex flex-col items-center">
-            <div>image</div>
-            <div>{spaceName === "" ? "Space Name" : spaceName}</div>
-            <div className="mt-4 text-2xl md:text-3xl font-bold">
-              {title === "" ? "Header Goes here" : title}
+            <div className="text-green-600 bg-green-200 rounded-full px-2 font-semibold">
+              Live preview - Testimonial Page
             </div>
-            <div className="mt-4">
+            <div className="mt-12"><img src="logo.svg" alt="" className="bg-black" /></div>
+            <div className="mt-4 text-2xl md:text-3xl font-bold text-gray-600">
+              {title === "" ? "Header goes here..." : title}
+            </div>
+            <div className="mt-4 bold text-gray-500">
               {customMessage === ""
-                ? "Custom message goes here"
+                ? "Your custom message goes here..."
                 : customMessage}
             </div>
 
             <div className="mt-4">
-              <div>Questions comes here</div>
+              <div>QUESTIONS</div>
+              <div className="text-gray-500">
               {allQuestions.map((question, index) => (
                 <div key={index}>{question}
                 </div>
               ))}
+            </div>
+            </div>
+
+            <div className="mt-12 w-full">
+                <button className="border p-2 w-full bg-blue-500 text-white">Send in text</button>
             </div>
           </div>
         </div>
@@ -71,7 +83,7 @@ export function CreateSpace() {
               Create a new Space
             </div>
 
-            <div className="mt-8 ">
+            <div className="mt-8 text-center">
               After the Space is created, it will generate a dedicated page for
               collecting testimonials.
             </div>
@@ -82,7 +94,7 @@ export function CreateSpace() {
             <input
               type="text"
               placeholder="Space name"
-              className="border"
+              className="border w-full rounded-lg p-2"
               onChange={(e) => setSpaceName(e.target.value)}
             />
           </div>
@@ -98,40 +110,44 @@ export function CreateSpace() {
             <div>Header Title</div>
             <input
               type="text"
-              placeholder="Title"
-              className="border"
+              placeholder="Would you like to give a shoutout for xyz?"
+              className="border w-full rounded-lg p-2"
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
-
+              
           <div className="mt-4">
-            <div>Custom Message</div>
+            <div>Your custom message</div>
             <textarea
-              placeholder="Type the custom message that you required"
-              className="border"
+              placeholder="Write a warm message to your customer,and give them simple directions on how to make the best testimonial."
+              className="border w-full rounded-lg p-2 h-24"
               onChange={(e) => setCustomMessage(e.target.value)}
             />
           </div>
 
           <div className="mt-4">
+            
             <div>Questions</div>
             {allQuestions.map((question, index) => (
               <div className="mt-2">
+
               <input
                 key={index}
                 type="text"
                 placeholder={`Question ${index + 1}`}
                 className="border mt-2"
                 value={question}
-                onChange={(e) => handleQuestionChange(index, e.target.value)}
-              /></div>
+                onChange={(e) => handleQuestionChange(index,e.target.value)}
+              />
+              </div>
             ))}
+
             <button className="mt-2 border p-2" onClick={addQuestion}>
               Add Question
             </button>
           </div>
 
-          <div className="mt-4">
+          <div className="mt-4 flex justify-center">
             <BlueButton text="Create new space" onClick={handle} />
           </div>
         </div>

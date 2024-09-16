@@ -9,7 +9,7 @@ export const BlueButton = ({ text, onClick }: ButtonProps) => {
   return (
     <>
       <button
-        className="border rounded-lg font-semibold text-white bg-blue-600 p-2"
+        className="border rounded-lg font-semibold text-white bg-blue-500 p-2"
         onClick={onClick}
       >
         {text}

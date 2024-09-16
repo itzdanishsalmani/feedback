@@ -7,7 +7,7 @@ import jsonwebtoken from "jsonwebtoken";
 const jwt = jsonwebtoken;
 import cookieParser from "cookie-parser";
 import { PrismaClient } from "@prisma/client";
-import bcrypt, { hash } from "bcrypt"
+import bcrypt, { hash } from "bcrypt";
 const prisma = new PrismaClient();
 
 const app = express();
@@ -19,7 +19,7 @@ if (!SECRET_KEY) {
 }
 app.use(
   cors({
-    origin: "*", 
+    origin: "*",
     credentials: true, // Allow credentials (cookies)
   })
 );
@@ -30,34 +30,29 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
-
   const { username, email, password } = req.body;
 
-  if(!username || !email || !password){
+  if (!username || !email || !password) {
     return res.status(404).json({
-      error:"Fields cannot be empty"
-    })
+      error: "Fields cannot be empty",
+    });
   }
 
-  const encryptedPassword = await bcrypt.hash(password,10)
+  const encryptedPassword = await bcrypt.hash(password, 10);
 
   console.log(username, email, encryptedPassword);
 
   try {
-
     const userExist = await prisma.user.findFirst({
-      where:{
-        OR: [
-          { username: username },
-          { email: email }
-        ]
-      }
-    })
+      where: {
+        OR: [{ username: username }, { email: email }],
+      },
+    });
 
-    if(userExist){
-      return res.status(411).json({
-        error:"User Already Exist"
-      })
+    if (userExist) {
+      return res.status(401).json({
+        error: "User Already Exist",
+      });
     }
 
     const user = await prisma.user.create({
@@ -67,53 +62,50 @@ app.post("/signup", async (req, res) => {
         password: encryptedPassword,
       },
     });
-  
+
     const access_token = await jwt.sign(
       { id: user.id, email: user.email },
       SECRET_KEY
     );
-  
+
     const options = {
       httpOnly: true,
       secure: true,
     };
-  
+
     return res.status(200).cookie("access_token", access_token, options).json({
       message: "User Created Successfully!",
-      user
+      user,
     });
-
   } catch (error) {
     return res.status(500).json({
-      error:"Server error"
-    })
+      error: "Internal server error",
+    });
   }
 });
 
 app.post("/signin", async (req, res) => {
-
   const { email, password } = req.body;
 
-  if(!email || !password){
+  if (!email || !password) {
     return res.status(404).json({
-      error:"Fields cannot be empty"
-    })
+      error: "Fields cannot be empty",
+    });
   }
-  
+
   console.log(email, password);
 
   try {
-
     const userExist = await prisma.user.findFirst({
-      where:{
-        email:email,
-      }
-    })
+      where: {
+        email: email,
+      },
+    });
 
-    if(!userExist){
+    if (!userExist) {
       return res.status(404).json({
-        error:"User not found"
-      })
+        error: "User not found",
+      });
     }
 
     const isPasswordValid = await bcrypt.compare(password, userExist.password);
@@ -123,27 +115,29 @@ app.post("/signin", async (req, res) => {
         error: "Invalid password",
       });
     }
-  
-    if(userExist) {
+
+    if (userExist) {
       const access_token = await jwt.sign(
         { id: userExist.id, email: userExist.email },
         SECRET_KEY
       );
-    
+
       const options = {
         httpOnly: true,
         secure: true,
       };
-    
-      return res.status(200).cookie("access_token", access_token, options).json({
-        message: "Signin successfully!"
-      });
+
+      return res
+        .status(200)
+        .cookie("access_token", access_token, options)
+        .json({
+          message: "Signin successfully!",
+        });
     }
-    
   } catch (error) {
     return res.status(500).json({
-      error:"Server error"
-    })
+      error: "Internal server error",
+    });
   }
 });
 
@@ -151,38 +145,48 @@ app.get("/getspace", authMiddleware, async (req, res) => {
   const userId = req.body.user.id;
   console.log(userId);
 
-  const userWithSpaces = await prisma.user.findUnique({
-    where: {
-      id: parseInt(userId),
-    },
-    select: {
-      userspace: {
-        select: {
-          spacename: true,
-          userId: true,
+  try {
+    const userWithSpaces = await prisma.user.findUnique({
+      where: {
+        id: parseInt(userId),
+      },
+      select: {
+        userspace: {
+          select: {
+            spacename: true,
+            userId: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  if (!userWithSpaces || !userWithSpaces.userspace) {
-    return res.status(404).json({ error: "Spacename not found" });
+    if (!userWithSpaces) {
+      return res.status(404).json({
+        error: "Spacename not found",
+      });
+    }
+
+    // Extract the spacenames from the userspace array
+    const spacenames = userWithSpaces.userspace.map((space) => space.spacename);
+
+    return res.status(200).json({
+      message: "Spacename is retrieved",
+      spacenames,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "Internal server error",
+    });
   }
-
-  // Extract the spacenames from the userspace array
-  const spacenames = userWithSpaces.userspace.map((space) => space.spacename);
-
-  return res.json({ spacenames, userId });
 });
 
 app.get("/publicspacename/:space", async (req, res) => {
-
   const spacename = req.params.space;
 
-  if(!spacename){
+  if (!spacename) {
     return res.status(404).json({
-      error:"Spacename is required"
-    })
+      error: "Spacename is required",
+    });
   }
 
   console.log(spacename);
@@ -193,25 +197,22 @@ app.get("/publicspacename/:space", async (req, res) => {
         spacename: spacename,
       },
     });
-  
+
     if (!userWithSpacename) {
       return res.status(404).json({
         error: "Spacename doesn't exist",
       });
     }
-  
-    return res.status(200).json({ 
+
+    return res.status(200).json({
       userWithSpacename,
-      message: "Spacename is retrieved" 
+      message: "Spacename is retrieved",
     });
-
   } catch (error) {
-
     return res.status(500).json({
-      error:"Server error"
-    })
+      error: "Internal server error",
+    });
   }
-  
 });
 
 app.post("/createspace", authMiddleware, async (req, res) => {
@@ -219,16 +220,15 @@ app.post("/createspace", authMiddleware, async (req, res) => {
 
   const { spacename, title, description, questions } = req.body;
 
-  if(!spacename || !title || !description || !questions){
+  if (!spacename || !title || !description || !questions) {
     return res.status(404).json({
-      error:"Fields are required"
-    })
+      error: "Fields are required",
+    });
   }
 
   console.log(userId, spacename, title, description, questions);
 
   try {
-
     const space = await prisma.userSpace.create({
       data: {
         spacename: spacename,
@@ -240,70 +240,62 @@ app.post("/createspace", authMiddleware, async (req, res) => {
     });
 
     return res.status(200).json({
-      space,
-      message:"Space created successfully!"
+      message: "Space created successfully!",
     });
-
   } catch (error) {
     return res.status(500).json({
-      message:"Server error"
-    })
+      error: "Internal server error",
+    });
   }
-
 });
 
 app.post("/review", async (req, res) => {
   const { review, stars, name, email, spacename } = req.body;
 
-  if(!review || !stars || !name || !email || !spacename){
+  if (!review || !stars || !name || !email || !spacename) {
     return res.status(404).json({
-      error:"Fields are required"
-    })
-  }
-
-  console.log({ review, stars, name, email, spacename });
-  
-try {
-
-  const user = await prisma.userSpace.findFirst({
-    where: {
-      spacename: spacename,
-    },
-    select: {
-      userId: true,
-    },
-  });
-
-  if (!user) {
-    return res.status(404).json({
-      error: "User not found",
+      error: "Fields are required",
     });
   }
 
-  const userId = user?.userId;
+  console.log({ review, stars, name, email, spacename });
 
-  const newReviews = await prisma.review.create({
-    data: {
-      review: review,
-      stars: parseInt(stars),
-      name: name,
-      email: email,
-      userId: userId,
-    },
-  });
+  try {
+    const user = await prisma.userSpace.findFirst({
+      where: {
+        spacename: spacename,
+      },
+      select: {
+        userId: true,
+      },
+    });
 
-  return res.status(200).json({
-    newReviews,
-    msg: "Testimonial created successfully",
-  });
+    if (!user) {
+      return res.status(404).json({
+        error: "User not found",
+      });
+    }
 
-} catch (error) {
+    const userId = user?.userId;
 
-  return res.status(500).json({
-    error:"Server error"
-  })
-}
+    const newReviews = await prisma.review.create({
+      data: {
+        review: review,
+        stars: parseInt(stars),
+        name: name,
+        email: email,
+        userId: userId,
+      },
+    });
 
+    return res.status(200).json({
+      msg: "Testimonial created successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Internal server error",
+    });
+  }
 });
 
 const port = 3000;
