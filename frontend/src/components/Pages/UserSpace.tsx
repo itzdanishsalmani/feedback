@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { BlueButton } from "../UI/Button";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { RatingReview } from "../Utils/RatingReview";
 
 export function UserSpace() {
+  const [rating, setRating] = useState(0)
   const { spacename } = useParams();
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [review, setReview] = useState<string>("");
@@ -36,7 +38,7 @@ export function UserSpace() {
         review: review,
         email: email,
         name: name,
-        stars: 3,
+        stars: rating,
         spacename: spacename,
       },
       {
@@ -48,7 +50,7 @@ export function UserSpace() {
       alert("send successfully");
     }
   }
-
+    console.log(rating)
   if (spaceNotFound) {
     return (
       <div className="bg-black h-screen flex items-center justify-center text-white">
@@ -60,7 +62,7 @@ export function UserSpace() {
   return (
     <div className="bg-black h-screen relative">
       {showPopup && (
-        <div className="absolute inset-0 flex items-center justify-center text-black ">
+        <div className="absolute inset-0 flex items-center justify-center text-black">
           <div className="bg-white p-8 rounded-lg shadow-lg w-96">
             <div className="text-center">
               <div>
@@ -71,9 +73,15 @@ export function UserSpace() {
                   className="mx-auto mb-4"
                 />
               </div>
+             
               <div className="font-bold text-xl mb-4">
                 Write text testimonial to
               </div>
+
+              <div className="mt-4">
+                <RatingReview rating={rating} setRating={setRating} />
+              </div>
+
               <div className="text-left mb-4">
                 <div className="font-semibold mb-2">Questions</div>
                 <div>{"1. What did you like about the service?"}</div>

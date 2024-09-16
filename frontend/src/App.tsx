@@ -8,8 +8,9 @@ import { Summary } from "./components/Pages/Summary";
 import "./index.css";
 
 function App() {
+
   return (
-    <div>
+      <div>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
