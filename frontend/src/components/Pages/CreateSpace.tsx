@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { BlueButton } from "../UI/Button";
-import axios from "axios";
+import axios from "../BaseURL/axios";
 
 export function CreateSpace() {
   const [spaceName, setSpaceName] = useState<string>("");

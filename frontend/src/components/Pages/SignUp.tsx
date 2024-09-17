@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../BaseURL/axios";
 import { useState } from "react";
 import { WhiteButton } from "../UI/Button";
 
@@ -13,17 +13,17 @@ export function SignUp() {
       return;
       
     } else {
-      const res = await axios.post("/user", {
+      const res = await axios.post("/signup", {
         username,
         email,
         password,
       }, { withCredentials: true });
       
-      if (res) {
-        alert(res);
-        console.log(res)
+      if (res.data) {
+        alert(res.data.message);
+        console.log(res.data)
       } else {
-        alert("Something error");
+        alert(res.data.error);
       }
     }
   }

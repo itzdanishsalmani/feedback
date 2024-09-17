@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BlueButton } from "../UI/Button";
-import axios from "axios";
+import axios from "../BaseURL/axios";
 import { useParams } from "react-router-dom";
 import { RatingReview } from "../Utils/RatingReview";
 

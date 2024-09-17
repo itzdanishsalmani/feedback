@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { NavBarOther } from "../UI/NavBarOther"
 import { Link } from "react-router-dom"
-import axios from "axios"
+import axios from "../BaseURL/axios";
 
 export function Summary() {
 

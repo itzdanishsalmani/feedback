@@ -1,19 +1,54 @@
-// import { PrismaClient } from "@prisma/client";
-// import { users } from "./users";
+import { PrismaClient } from "@prisma/client";
 
-// const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
-// async function main() {
-//     for(let user of users){
-//         await prisma.user.create({
-//             data:user
-//         })
-//     }
-// }
+async function seedUsers() {
+  try {
+    await prisma.user.upsert({
+      where: {
+        id: 1,
+      },
+      create: {
+        id: 1,
+        email: 'testuser@example.com',
+        username: 'Test User 1',
+        password:'password'
+      },
+      update: {},
+    });
 
-// main().catch(e=>{
-//     console.log(e);
-//     process.exit(1)
-// }).finally(()=>{
-//     prisma.$disconnect()
-// })
+    await prisma.user.upsert({
+      where: {
+        id: 2,
+      },
+      create: {
+        id: 2,
+        email: 'testuser2@example.com',
+        username: 'Test User 2',
+        password: 'password',
+      },
+      update: {},
+    });
+  } catch (error) {
+    console.error('Error seeding users:', error);
+    throw error;
+  }
+}
+
+async function seedDatabase() {
+  try {
+    
+    await seedUsers();
+
+  } catch (error) {
+    console.error('Error seeding database:', error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+seedDatabase().catch((error) => {
+  console.error('An unexpected error occurred during seeding:', error);
+  process.exit(1);
+});

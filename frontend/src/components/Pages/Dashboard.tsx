@@ -2,7 +2,7 @@ import { NavBarOther } from "../UI/NavBarOther";
 import { Footer } from "../UI/Footer";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../BaseURL/axios";
 
 export function Dashboard() {
   const[space,setSpace] = useState<string>("")
