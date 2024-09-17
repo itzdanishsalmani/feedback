@@ -12,7 +12,7 @@ export function Dashboard() {
   },[])
 
   async function FetchSpace() {
-    const res = await axios.get("http://localhost:3000/getspace",{
+    const res = await axios.get("/getspace",{
       withCredentials:true
     })
   

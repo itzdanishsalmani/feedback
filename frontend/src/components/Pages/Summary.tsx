@@ -1,7 +1,20 @@
+import { useEffect } from "react"
 import { NavBarOther } from "../UI/NavBarOther"
 import { Link } from "react-router-dom"
+import axios from "axios"
 
 export function Summary() {
+
+    useEffect(()=>{
+
+    })
+
+    async function fetchData() {
+        await axios.get('',{
+            withCredentials:true
+        }
+        )
+    }
     return (
         <div className="bg-neutral-900 h-screen">
         <div className="max-w-[1200px] mx-auto">

@@ -17,7 +17,7 @@ export function UserSpace() {
     async function check() {
       try {
         const res = await axios.get(
-          `http://localhost:3000/publicspacename/${spacename}`
+          `/publicspacename/${spacename}`
         );
         if (res.data.error) {
           setSpaceNotFound(true); 
@@ -33,7 +33,7 @@ export function UserSpace() {
 
   async function request() {
     const res = await axios.post(
-      `http://localhost:3000/review`,
+      `/review`,
       {
         review: review,
         email: email,

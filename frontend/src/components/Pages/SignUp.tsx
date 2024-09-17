@@ -13,7 +13,7 @@ export function SignUp() {
       return;
       
     } else {
-      const res = await axios.post("http://localhost:3000/user", {
+      const res = await axios.post("/user", {
         username,
         email,
         password,

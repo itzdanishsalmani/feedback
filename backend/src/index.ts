@@ -8,6 +8,7 @@ const jwt = jsonwebtoken;
 import cookieParser from "cookie-parser";
 import { PrismaClient } from "@prisma/client";
 import bcrypt, { hash } from "bcrypt";
+import { error } from "console";
 const prisma = new PrismaClient();
 
 const app = express();
@@ -192,7 +193,7 @@ app.get("/publicspacename/:space", async (req, res) => {
   console.log(spacename);
 
   try {
-    const userWithSpacename = await prisma.userSpace.findFirst({
+    const userWithSpacename = await prisma.userspace.findFirst({
       where: {
         spacename: spacename,
       },
@@ -229,7 +230,7 @@ app.post("/createspace", authMiddleware, async (req, res) => {
   console.log(userId, spacename, title, description, questions);
 
   try {
-    const space = await prisma.userSpace.create({
+    const space = await prisma.userspace.create({
       data: {
         spacename: spacename,
         title: title,
@@ -261,7 +262,7 @@ app.post("/review", async (req, res) => {
   console.log({ review, stars, name, email, spacename });
 
   try {
-    const user = await prisma.userSpace.findFirst({
+    const user = await prisma.userspace.findFirst({
       where: {
         spacename: spacename,
       },
@@ -289,7 +290,7 @@ app.post("/review", async (req, res) => {
     });
 
     return res.status(200).json({
-      msg: "Testimonial created successfully",
+      message: "Testimonial created successfully",
     });
   } catch (error) {
     return res.status(500).json({
@@ -297,6 +298,43 @@ app.post("/review", async (req, res) => {
     });
   }
 });
+
+app.get("/getreview", authMiddleware, async (req,res)=>{
+  const userId = req.body.user.id;
+
+  try {
+    
+    const getReview = await prisma.review.findMany({
+      where:{
+        userId:userId,
+      },
+      select:{
+        review:true,
+        name:true,
+        email:true,
+        stars:true
+      }
+    })
+
+    if(!getReview){
+      return res.status(404).json({
+        error:"reviews not found"
+      })
+    }
+    
+      return res.status(200).json({
+        message:"Reviews fetched successfully",
+        getReview
+      })
+      
+    
+  } catch (error) {
+    return res.status(500).json({
+      error: "Internal server error",
+    })
+  }
+
+})
 
 const port = 3000;
 app.listen(port, () => {

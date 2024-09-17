@@ -1,6 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
 import { BlueButton } from "../UI/Button";
+import axios from "axios";
 
 export function CreateSpace() {
   const [spaceName, setSpaceName] = useState<string>("");
@@ -26,7 +26,7 @@ export function CreateSpace() {
 
   async function handle() {
     const res = await axios.post(
-      "http://localhost:3000/createspace",
+      "/createspace",
       {
         spacename: spaceName,
         title: title,
