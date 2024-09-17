@@ -24,7 +24,7 @@ export function UserSpace() {
         }
       } catch (error) {
         console.error("API call failed:", error);
-        setSpaceNotFound(true); 
+        setSpaceNotFound(false); 
       }
     }
 
@@ -53,14 +53,14 @@ export function UserSpace() {
     console.log(rating)
   if (spaceNotFound) {
     return (
-      <div className="bg-black h-screen flex items-center justify-center text-white">
+      <div className="bg-neutral-900 h-screen flex items-center justify-center text-white">
         <h1 className="text-4xl font-bold">PAGE NOT FOUND</h1>
       </div>
     );
   }
 
   return (
-    <div className="bg-black h-screen relative">
+    <div className="bg-neutral-900 h-screen relative">
       {showPopup && (
         <div className="absolute inset-0 flex items-center justify-center text-black">
           <div className="bg-white p-8 rounded-lg shadow-lg w-96">

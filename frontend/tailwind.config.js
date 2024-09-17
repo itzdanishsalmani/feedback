@@ -9,3 +9,6 @@ export default {
   },
   plugins: [],
 }
+
+// dark black #151719
+//light black #25282c

@@ -10,37 +10,38 @@ export function CreateSpace() {
 
   // Handle adding a new question input
   function addQuestion() {
-    
-    if(allQuestions.length<3){
+    if (allQuestions.length < 3) {
       setAllQuestions([...allQuestions, ""]);
-    }else{
-      alert("max count is 3")
+    } else {
+      alert("max count is 3");
     }
-
   }
 
   // Handle changing the value of a specific question
   function handleQuestionChange(index: number, value: string) {
     const updatedQuestions = [...allQuestions];
-    updatedQuestions[index] = value
+    updatedQuestions[index] = value;
     setAllQuestions(updatedQuestions);
   }
 
   async function handle() {
-    const res = await axios
-      .post("http://localhost:3000/createspace", {
+    const res = await axios.post(
+      "http://localhost:3000/createspace",
+      {
         spacename: spaceName,
         title: title,
         description: customMessage,
         questions: allQuestions, // Sending as an array of objects
-      },{
-        withCredentials:true
-      })
-        if (res.data.message) {
-          alert(res.data.message);
-        } else {
-          alert(res.data.error);
-        }
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    if (res.data.message) {
+      alert(res.data.message);
+    } else {
+      alert(res.data.error);
+    }
   }
 
   return (
@@ -51,7 +52,9 @@ export function CreateSpace() {
             <div className="text-green-600 bg-green-200 rounded-full px-2 font-semibold">
               Live preview - Testimonial Page
             </div>
-            <div className="mt-12"><img src="logo.svg" alt="" className="bg-black" /></div>
+            <div className="mt-12">
+              <img src="logo.svg" alt="" className="bg-black" />
+            </div>
             <div className="mt-4 text-2xl md:text-3xl font-bold text-gray-600">
               {title === "" ? "Header goes here..." : title}
             </div>
@@ -64,15 +67,16 @@ export function CreateSpace() {
             <div className="mt-4">
               <div>QUESTIONS</div>
               <div className="text-gray-500">
-              {allQuestions.map((question, index) => (
-                <div key={index}>{question}
-                </div>
-              ))}
-            </div>
+                {allQuestions.map((question, index) => (
+                  <div key={index}>{question}</div>
+                ))}
+              </div>
             </div>
 
             <div className="mt-12 w-full">
-                <button className="border p-2 w-full bg-blue-500 text-white">Send in text</button>
+              <button className="border p-2 w-full bg-blue-500 text-white">
+                Send in text
+              </button>
             </div>
           </div>
         </div>
@@ -115,7 +119,7 @@ export function CreateSpace() {
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
-              
+
           <div className="mt-4">
             <div>Your custom message</div>
             <textarea
@@ -126,19 +130,17 @@ export function CreateSpace() {
           </div>
 
           <div className="mt-4">
-            
             <div>Questions</div>
             {allQuestions.map((question, index) => (
               <div className="mt-2">
-
-              <input
-                key={index}
-                type="text"
-                placeholder={`Question ${index + 1}`}
-                className="border mt-2"
-                value={question}
-                onChange={(e) => handleQuestionChange(index,e.target.value)}
-              />
+                <input
+                  key={index}
+                  type="text"
+                  placeholder={`Question ${index + 1}`}
+                  className="border mt-2"
+                  value={question}
+                  onChange={(e) => handleQuestionChange(index, e.target.value)}
+                />
               </div>
             ))}
 
