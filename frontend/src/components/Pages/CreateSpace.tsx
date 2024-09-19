@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { BlueButton } from "../UI/Button";
 import axios from "../BaseURL/axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"
 
 export function CreateSpace() {
   const [spaceName, setSpaceName] = useState<string>("");
@@ -8,12 +10,14 @@ export function CreateSpace() {
   const [customMessage, setCustomMessage] = useState<string>("");
   const [allQuestions, setAllQuestions] = useState<string[]>([""]);
 
+  const navigate = useNavigate()
+  
   // Handle adding a new question input
   function addQuestion() {
     if (allQuestions.length < 3) {
       setAllQuestions([...allQuestions, ""]);
     } else {
-      alert("max count is 3");
+      toast("max count is 3");
     }
   }
 
@@ -37,13 +41,13 @@ export function CreateSpace() {
         withCredentials: true,
       }
     );
-    if (res.data.message) {
-      alert(res.data.message);
+    if (res.data) {
+      toast(res.data.message);
+      navigate('/summary')
     } else {
-      alert(res.data.error);
+      toast(res.data.error);
     }
-  }
-
+  }  
   return (
     <div className="max-w-[1200px] mx-auto text-gray-800">
       <div className="grid grid-cols-1 md:grid-cols-12">

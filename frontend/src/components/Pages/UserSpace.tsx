@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { BlueButton } from "../UI/Button";
 import axios from "../BaseURL/axios";
 import { useParams } from "react-router-dom";
 import { RatingReview } from "../Utils/RatingReview";
+import { toast } from "react-toastify"
 
 export function UserSpace() {
   const [rating, setRating] = useState(0)
@@ -24,7 +24,7 @@ export function UserSpace() {
         }
       } catch (error) {
         console.error("API call failed:", error);
-        setSpaceNotFound(false); 
+        setSpaceNotFound(true); 
       }
     }
 
@@ -47,10 +47,13 @@ export function UserSpace() {
     );
     if (res.data) {
       console.log(res.data);
-      alert("send successfully");
+      toast(res.data.message);
+    }else{
+      toast(res.data.error)
     }
   }
     console.log(rating)
+    
   if (spaceNotFound) {
     return (
       <div className="bg-neutral-900 h-screen flex items-center justify-center text-white">
@@ -64,6 +67,10 @@ export function UserSpace() {
       {showPopup && (
         <div className="absolute inset-0 flex items-center justify-center text-black">
           <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+            <div className="flex justify-end cursor-pointer" 
+            onClick={()=>setShowPopup(false)}>
+              close
+            </div>
             <div className="text-center">
               <div>
                 <img
@@ -122,7 +129,9 @@ export function UserSpace() {
               </div>
 
               <div className="mt-6">
-                <BlueButton text="Send" onClick={request} />
+                <button
+                  className="px-6 py-2 rounded-md bg-blue-600 font-medium text-white"
+                  onClick={request} >Send</button>
               </div>
             </div>
           </div>
@@ -148,7 +157,9 @@ export function UserSpace() {
         </div>
 
         <div className="mt-12">
-          <BlueButton text="write" onClick={() => setShowPopup(!showPopup)} />
+          <button 
+          className="px-6 py-2 rounded-md bg-blue-600 font-medium text-white cursor-pointer"
+          onClick={() => setShowPopup(!showPopup)}>write</button>
         </div>
       </div>
     </div>

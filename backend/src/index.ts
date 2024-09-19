@@ -109,13 +109,15 @@ app.post("/signin", async (req, res) => {
       });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, userExist.password);
+    // comment password encryption when using seeded data for signin    
 
-    if (!isPasswordValid) {
-      return res.status(401).json({
-        error: "Invalid password",
-      });
-    }
+    // const isPasswordValid = await bcrypt.compare(password, userExist.password);
+
+    // if (!isPasswordValid) {
+    //   return res.status(401).json({
+    //     error: "Invalid password",
+    //   });
+    // }
 
     if (userExist) {
       const access_token = await jwt.sign(
@@ -240,9 +242,13 @@ app.post("/createspace", authMiddleware, async (req, res) => {
       },
     });
 
+    if(space){
     return res.status(200).json({
       message: "Space created successfully!",
+      spacename
     });
+  }
+
   } catch (error) {
     return res.status(500).json({
       error: "Internal server error",
@@ -316,7 +322,18 @@ app.get("/getreview", authMiddleware, async (req,res)=>{
       }
     })
 
-    if(!getReview){
+    const space = await prisma.userspace.findFirst({
+      where:{
+        userId:userId
+      },
+      select:{
+        spacename:true
+      }
+    })
+
+
+
+    if(!getReview || !space){
       return res.status(404).json({
         error:"reviews not found"
       })
@@ -324,7 +341,8 @@ app.get("/getreview", authMiddleware, async (req,res)=>{
     
       return res.status(200).json({
         message:"Reviews fetched successfully",
-        getReview
+        getReview,
+        space
       })
       
     

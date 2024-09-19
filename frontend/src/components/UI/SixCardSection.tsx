@@ -82,7 +82,7 @@ const CardWrapperLeftText = ({text1,text2,text3,text4,text4_css,image}:CardText)
                 <div className="mt-4 text-white text-4xl font-bold">{text2}</div>
                 <div className="mt-4 text-lg">{text3}</div>
                 <div className={text4_css}>{text4}</div>
-                <div><button className="mt-4 p-2 bg-blue-700 rounded-lg">Try it for Free</button></div>
+                <div><button className="mt-4 p-2 bg-blue-600 rounded-lg">Try it for Free</button></div>
             </div>
 
             <div className="md:ml-8">
@@ -110,7 +110,7 @@ const CardWrapperRightText = ({text1,text2,text3,text4,text4_css,image}:CardText
                 <div className="mt-4 text-white text-4xl font-bold">{text2}</div>
                 <div className="mt-4 text-lg">{text3}</div>
                 <div className={text4_css}>{text4}</div>
-                <div><button className="mt-4 p-2 bg-blue-700 rounded-lg">Try if for Free</button></div>
+                <div><button className="mt-4 p-2 bg-blue-600 rounded-lg">Try if for Free</button></div>
             </div>
         </div>
     )

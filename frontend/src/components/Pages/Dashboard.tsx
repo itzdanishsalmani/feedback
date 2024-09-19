@@ -60,7 +60,7 @@ function Space({space}:any) {
   return (
     <div>
       <div className="mt-24 flex justify-between items-center px-24">
-        <div>
+        <div className="cursor-pointer text-3xl underline" onClick={()=>(navigate('/summary'))}>
           {space}
         </div>
         <div>

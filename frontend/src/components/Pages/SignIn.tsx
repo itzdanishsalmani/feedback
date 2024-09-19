@@ -2,32 +2,28 @@ import axios from "../BaseURL/axios";
 import { useState } from "react";
 import { WhiteButton } from "../UI/Button";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast } from "react-toastify"
 
-export function SignUp() {
-  const [username, setUserame] = useState("");
+export function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate()
-
   async function handle() {
-    if (username === "" || email === "" || password === "") {
+    if (email === "" || password === "") {
       toast("Fields cannot be empty");
       return;
       
     } else {
-      const res = await axios.post("/signup", {
-        username,
+      const res = await axios.post("/signin", {
         email,
         password,
       }, { withCredentials: true });
       
       if (res.data) {
         toast(res.data.message);
-        console.log(res.data);
         navigate('/dashboard')
-
+        console.log(res.data)
       } else {
         toast(res.data.error);
       }
@@ -43,14 +39,7 @@ export function SignUp() {
             Enter your email below to create an account
           </div>
           <div className="mt-4">
-            <input
-              type="text"
-              placeholder="John doe"
-              className="w-full rounded-lg text-white border p-2 bg-black"
-              onChange={(e) => {
-                setUserame(e.target.value);
-              }}
-            />
+           
             <input
               type="email"
               placeholder="johndoe@example.com"
@@ -67,7 +56,7 @@ export function SignUp() {
                 setPassword(e.target.value);
               }}
             />
-            <WhiteButton text="Sign up" onClick={handle} />
+            <WhiteButton text="Sign in" onClick={handle} />
             <div className="mt-4 text-center">
               By clicking on Continue, you agree to our{" "}
               <span className="underline">Terms of Service</span> and{" "}
