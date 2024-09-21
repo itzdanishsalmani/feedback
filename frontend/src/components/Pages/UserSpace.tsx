@@ -13,7 +13,7 @@ export function UserSpace() {
   const [name, setName] = useState<string>("");
   const [spaceNotFound, setSpaceNotFound] = useState<boolean>(false);
 
-  useEffect(() => {
+    useEffect(()=>{ 
     async function check() {
       try {
         const res = await axios.get(

@@ -17,14 +17,14 @@ export function SignIn() {
       
     } else {
       const res = await axios.post("/signin", {
-        email,
+        email,  
         password,
       });
       
       if (res.data) {        
         localStorage.setItem("access_token",res.data.access_token)
+        console.log(res.data)
         toast(res.data.message);
-        console.log(res.data);
         navigate('/dashboard')
 
       } else {

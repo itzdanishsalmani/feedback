@@ -6,6 +6,7 @@ import axios from "../BaseURL/axios";
 
 export function Dashboard() {
   const[space,setSpace] = useState<string>("")
+  const [showCreateSpace, setShowCreateSpace] = useState<boolean>(true)
 
   useEffect(()=>{
     FetchSpace()
@@ -19,9 +20,10 @@ export function Dashboard() {
         }
        })
   
-    if(res.data){
-      console.log(res.data.spacenames)
+    if(res.data.spacenames){
+      console.log(res.data)
       setSpace(res.data.spacenames)
+      setShowCreateSpace(false)
     }
   }
  
@@ -30,7 +32,7 @@ export function Dashboard() {
       <div>
         <NavBarOther />
         <Mid />
-        <Space space={space}/>
+      <Space space={space} showCreateSpace={showCreateSpace}/>
         <Footer />
       </div>
     </div>
@@ -57,7 +59,8 @@ function Mid() {
   );
 }
 
-function Space({space}:any) {
+
+function Space({space,showCreateSpace}:any) {
   const navigate = useNavigate()
 
   return (
@@ -66,11 +69,13 @@ function Space({space}:any) {
         <div className="cursor-pointer text-3xl underline" onClick={()=>(navigate('/summary'))}>
           {space}
         </div>
+        { showCreateSpace &&
         <div>
           <button className="border" onClick={()=>{
             navigate('/create')
           }}>Create Space</button>
         </div>
+}
       </div>
     </div>
   )
