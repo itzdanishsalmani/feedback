@@ -7,21 +7,21 @@ import jsonwebtoken from "jsonwebtoken";
 const jwt = jsonwebtoken;
 import cookieParser from "cookie-parser";
 import { PrismaClient } from "@prisma/client";
-import bcrypt, { hash } from "bcrypt";
-import { error } from "console";
+import bcrypt from "bcrypt";
+import path from "path";
 const prisma = new PrismaClient();
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, '../public')));
 
 if (!SECRET_KEY) {
   throw new Error("SECRET_KEY is not defined in the environment variables");
 }
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    credentials: true, // Allow credentials (cookies)
+    origin: '*',
   })
 );
 
@@ -69,13 +69,17 @@ app.post("/signup", async (req, res) => {
       SECRET_KEY
     );
 
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
+    // const options = {
+    //   httpOnly: true,
+    //   secure: true,
+    // };
 
-    return res.status(200).cookie("access_token", access_token, options).json({
+    return res.status(200)
+    // .cookie("access_token", access_token, options)
+
+    .json({
       message: "User Created Successfully!",
+      access_token,
       user,
     });
   } catch (error) {
@@ -100,6 +104,7 @@ app.post("/signin", async (req, res) => {
     const userExist = await prisma.user.findFirst({
       where: {
         email: email,
+        password:password
       },
     });
 
@@ -109,7 +114,7 @@ app.post("/signin", async (req, res) => {
       });
     }
 
-    // comment password encryption when using seeded data for signin    
+    // comment password encryption when using seeded data for signin
 
     // const isPasswordValid = await bcrypt.compare(password, userExist.password);
 
@@ -125,16 +130,17 @@ app.post("/signin", async (req, res) => {
         SECRET_KEY
       );
 
-      const options = {
-        httpOnly: true,
-        secure: true,
-      };
+      // const options = {
+      //   httpOnly: true,
+      //   secure: true,
+      // };
 
       return res
         .status(200)
-        .cookie("access_token", access_token, options)
+        // .cookie("access_token", access_token, options)
         .json({
           message: "Signin successfully!",
+          access_token,
         });
     }
   } catch (error) {
@@ -180,6 +186,24 @@ app.get("/getspace", authMiddleware, async (req, res) => {
     res.status(500).json({
       error: "Internal server error",
     });
+  }
+});
+
+app.get("/publicspacename", async (req, res) => {
+  
+  try {
+    const userWithSpacename = await prisma.userspace.findMany({
+      select: { spacename: true },
+    });
+
+    return res.status(200).json({
+      userWithSpacename,
+      message: "Spacename is retrieved",
+    });
+
+  } catch (error) {
+    console.error('Error fetching spacename:', error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -242,13 +266,12 @@ app.post("/createspace", authMiddleware, async (req, res) => {
       },
     });
 
-    if(space){
-    return res.status(200).json({
-      message: "Space created successfully!",
-      spacename
-    });
-  }
-
+    if (space) {
+      return res.status(200).json({
+        message: "Space created successfully!",
+        spacename,
+      });
+    }
   } catch (error) {
     return res.status(500).json({
       error: "Internal server error",
@@ -305,56 +328,61 @@ app.post("/review", async (req, res) => {
   }
 });
 
-app.get("/getreview", authMiddleware, async (req,res)=>{
+app.get("/getreview", authMiddleware, async (req, res) => {
   const userId = req.body.user.id;
 
   try {
-    
     const getReview = await prisma.review.findMany({
-      where:{
-        userId:userId,
+      where: {
+        userId: userId,
       },
-      select:{
-        review:true,
-        name:true,
-        email:true,
-        stars:true
-      }
-    })
+      select: {
+        review: true,
+        name: true,
+        email: true,
+        stars: true,
+      },
+    });
 
     const space = await prisma.userspace.findFirst({
-      where:{
-        userId:userId
+      where: {
+        userId: userId,
       },
-      select:{
-        spacename:true
-      }
-    })
+      select: {
+        spacename: true,
+      },
+    });
 
-
-
-    if(!getReview || !space){
+    if (!getReview || !space) {
       return res.status(404).json({
-        error:"reviews not found"
-      })
+        error: "reviews not found",
+      });
     }
-    
-      return res.status(200).json({
-        message:"Reviews fetched successfully",
-        getReview,
-        space
-      })
-      
-    
+
+    return res.status(200).json({
+      message: "Reviews fetched successfully",
+      getReview,
+      space,
+    });
   } catch (error) {
     return res.status(500).json({
       error: "Internal server error",
-    })
+    });
   }
-
-})
+});
 
 const port = 3000;
 app.listen(port, () => {
   console.log(`server is running at port ${port}`);
 });
+
+
+
+
+
+
+
+
+
+
+

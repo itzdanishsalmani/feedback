@@ -38,7 +38,9 @@ export function CreateSpace() {
         questions: allQuestions, // Sending as an array of objects
       },
       {
-        withCredentials: true,
+       headers:{
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`
+       }
       }
     );
     if (res.data) {

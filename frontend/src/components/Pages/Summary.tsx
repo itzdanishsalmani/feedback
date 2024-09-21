@@ -55,8 +55,10 @@ export function Summary() {
   async function fetchData() {
     try {
       const res = await axios.get("/getreview", {
-        withCredentials: true,
-      });
+        headers:{
+         Authorization: `Bearer ${localStorage.getItem("access_token")}`
+        }
+       });
       if (
         res.data.space.spacename ||
         res.data.getReview &&

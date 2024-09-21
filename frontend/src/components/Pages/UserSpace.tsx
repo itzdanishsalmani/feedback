@@ -42,8 +42,10 @@ export function UserSpace() {
         spacename: spacename,
       },
       {
-        withCredentials: true,  
-      }
+        headers:{
+         Authorization: `Bearer ${localStorage.getItem("access_token")}`
+        }
+       }
     );
     if (res.data) {
       console.log(res.data);

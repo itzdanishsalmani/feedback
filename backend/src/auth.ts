@@ -17,7 +17,12 @@ export async function authMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  const token = req.cookies.access_token;
+  const authHeader = req.headers.authorization;
+  console.log(authHeader)
+
+  const token = authHeader?.split(' ')[1];
+
+  console.log(token);
 
   if (!token) {
     return res.status(401).json({
@@ -28,5 +33,6 @@ export async function authMiddleware(
   const decodedValue = jwt.verify(token, SECRET_KEY) as MyJwtPayload;
 
   req.body.user = decodedValue;
+
   next();
 }

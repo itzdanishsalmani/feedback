@@ -13,8 +13,11 @@ export function Dashboard() {
 
   async function FetchSpace() {
     const res = await axios.get("/getspace",{
-      withCredentials:true
-    })
+      
+        headers:{
+         Authorization: `Bearer ${localStorage.getItem("access_token")}`
+        }
+       })
   
     if(res.data){
       console.log(res.data.spacenames)
