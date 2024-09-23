@@ -52,9 +52,13 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
   );
 };
 
+interface OptionsProps {
+  setWall : (argument:boolean) => void;
+}
+
 // Define the Options component
 // sidebar of Wall of Love
-const Options: React.FC = ({ setWall }: any) => {
+const Options: React.FC<OptionsProps> = ({ setWall }) => {
   return (
     <div
       className="mt-4 text-white cursor-pointer p-2 rounded-lg hover:bg-neutral-800 mr-4"
@@ -127,11 +131,14 @@ export function Summary() {
 
                 <div className="mt-4">
                   <p>
+                    let id = testimonialId;
+                  <div id='{`testimonial-widget-container${id}`}' ></div>
                     <script
                       type="text/javascript"
                       src="http://localhost:3000/js/widget.js"
                     ></script>
-                    const userId = 1 const theme = 2
+                    const userId = 1 
+                    const theme = 2
                     <iframe
                       id="{`${userId}`+`${theme}`}"
                       src="https://embed-v2.testimonial.to/carousel/all/hello6?theme=dark&autoplay=on&showmore=on&one-row=on&hideDate=on&same-height=off&tag=all&arrowColor=9BA9B4"
