@@ -5,7 +5,6 @@ import express from "express";
 import cors from "cors";
 import jsonwebtoken from "jsonwebtoken";
 const jwt = jsonwebtoken;
-import cookieParser from "cookie-parser";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import path from "path";
@@ -13,17 +12,12 @@ const prisma = new PrismaClient();
 
 const app = express();
 app.use(express.json());
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
+app.use(cors());
 
 if (!SECRET_KEY) {
   throw new Error("SECRET_KEY is not defined in the environment variables");
 }
-app.use(
-  cors({
-    origin: '*',
-  })
-);
 
 app.get("/", async (req, res) => {
   prisma.user.create;
@@ -69,14 +63,7 @@ app.post("/signup", async (req, res) => {
       SECRET_KEY
     );
 
-    // const options = {
-    //   httpOnly: true,
-    //   secure: true,
-    // };
-
     return res.status(200)
-    // .cookie("access_token", access_token, options)
-
     .json({
       message: "User Created Successfully!",
       access_token,
@@ -130,14 +117,8 @@ app.post("/signin", async (req, res) => {
         SECRET_KEY
       );
 
-      // const options = {
-      //   httpOnly: true,
-      //   secure: true,
-      // };
-
       return res
         .status(200)
-        // .cookie("access_token", access_token, options)
         .json({
           message: "Signin successfully!",
           access_token,
@@ -186,24 +167,6 @@ app.get("/getspace", authMiddleware, async (req, res) => {
     res.status(500).json({
       error: "Internal server error",
     });
-  }
-});
-
-app.get("/publicspacename", async (req, res) => {
-  
-  try {
-    const userWithSpacename = await prisma.userspace.findMany({
-      select: { spacename: true },
-    });
-
-    return res.status(200).json({
-      userWithSpacename,
-      message: "Spacename is retrieved",
-    });
-
-  } catch (error) {
-    console.error('Error fetching spacename:', error);
-    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -328,6 +291,40 @@ app.post("/review", async (req, res) => {
   }
 });
 
+// new api
+app.get("/testimonial/:userId", async (req, res) => {
+  const userId = req.params.userId
+  console.log(userId)
+  try {
+    const getReview = await prisma.review.findMany({
+      where: {
+        userId: parseInt(userId),
+      },
+      select: {
+        review: true,
+        name: true,
+        email: true,
+        stars: true,
+      },
+    });
+
+    if (!getReview) {
+      return res.status(404).json({
+        error: "reviews not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Reviews fetched successfully",
+      getReview,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+});
+
 app.get("/getreview", authMiddleware, async (req, res) => {
   const userId = req.body.user.id;
 
@@ -337,6 +334,7 @@ app.get("/getreview", authMiddleware, async (req, res) => {
         userId: userId,
       },
       select: {
+        id:true,
         review: true,
         name: true,
         email: true,
@@ -375,14 +373,4 @@ const port = 3000;
 app.listen(port, () => {
   console.log(`server is running at port ${port}`);
 });
-
-
-
-
-
-
-
-
-
-
 

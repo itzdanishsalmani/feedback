@@ -1,6 +1,7 @@
 (function() {
   // Configuration
-  const API_URL = 'http://localhost:3000/publicspacename'; 
+  const userId = 2
+  const API_URL = `http://localhost:3000/testimonial/${userId}`;
   const CONTAINER_ID = 'testimonial-widget-container';
 
   const style = document.createElement('style');
@@ -50,10 +51,11 @@
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
+
       const data = await response.json();
-      const userWithSpacename = data.userWithSpacename;
-      console.log(userWithSpacename)
-      renderReviews(userWithSpacename);
+      const getReview = data.getReview;
+      console.log(data.getReview)
+      renderReviews(getReview);
     } catch (error) {
       console.error('Failed to load testimonials:', error);
       container.innerHTML = '<p>Unable to load testimonials at this time.</p>';
@@ -61,13 +63,13 @@
   }
 
   // Function to render reviews
-  function renderReviews(spacenames) {
-    if (spacenames.length === 0) {
+  function renderReviews(reviews) {
+    if (reviews.length === 0) {
       container.innerHTML = '<p>No testimonials available.</p>';
       return;
     }
 
-    const testimonialsHTML = spacenames.map(user => `
+    const testimonialsHTML = reviews.map(user => `
       <div class="testimonial">
         <div class="review-text">Spacename: "${user.spacename}"</div>
       </div>
