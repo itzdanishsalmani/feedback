@@ -292,32 +292,40 @@ app.post("/review", async (req, res) => {
 });
 
 // new api
-app.get("/testimonial/:userId", async (req, res) => {
-  const userId = req.params.userId
-  console.log(userId)
+app.get("/testimonial/:spacename", async (req, res) => {
+  const spacename = req.params.spacename
+  console.log(spacename)
+
   try {
-    const getReview = await prisma.review.findMany({
+    const userSpacename = await prisma.userspace.findFirst({
       where: {
-        userId: parseInt(userId),
+        spacename: spacename,
       },
       select: {
-        review: true,
-        name: true,
-        email: true,
-        stars: true,
+        userId: true,
       },
     });
 
-    if (!getReview) {
-      return res.status(404).json({
-        error: "reviews not found",
-      });
-    }
+    const extrctedUserId = userSpacename?.userId
+
+    const getReview = await prisma.review.findMany({
+      where:{
+        userId:extrctedUserId
+      },
+      select:{
+        id:true,
+        review:true,
+        stars:true,
+        email:true,
+        name:true
+      }
+    }) 
 
     return res.status(200).json({
       message: "Reviews fetched successfully",
-      getReview,
+      getReview
     });
+
   } catch (error) {
     return res.status(500).json({
       error: "Internal server error",
@@ -373,4 +381,3 @@ const port = 3000;
 app.listen(port, () => {
   console.log(`server is running at port ${port}`);
 });
-

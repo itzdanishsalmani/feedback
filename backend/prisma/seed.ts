@@ -57,6 +57,20 @@ async function main() {
         userId: user1.id,
       },
       {
+        review: 'Great space!',
+        name: 'Oggy',
+        email: 'oggy@example.com',
+        stars: 5,
+        userId: user1.id,
+      },
+      {
+        review: 'Great space!',
+        name: 'Olivia',
+        email: 'olivia@example.com',
+        stars: 4,
+        userId: user1.id,
+      },
+      {
         review: 'Very useful and well-maintained.',
         name: 'Bob',
         email: 'bob@example.com',

@@ -1,16 +1,15 @@
 (function () {
   // Configuration
-  // let id;
+  let id = [3, 2]; // Assuming these are the required IDs you want to filter
 
   const CONTAINER_ID = `testimonial-widget-container`;
-
-  userId = 2;
-
-  const API_URL = `http://localhost:3000/testimonial/${userId}`;
+  const spacename = "john"; // Make sure this value is defined correctly
+  const API_URL = `http://localhost:3000/testimonial/${spacename}`;
 
   const style = document.createElement("style");
   style.innerHTML = `
-    #${CONTAINER_ID} {
+    #${CONTAINER_ID} .main {
+      margin:20px;
       font-family: Arial, sans-serif;
       background-color: #FFF;
       padding: 20px;
@@ -18,21 +17,16 @@
       max-width: 400px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
+
     #${CONTAINER_ID} .first-letter {
       width: 30px;
-      height:30px;
-      color:blue;
-      background-color:black;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      border-radius:100%
-    }
-    #${CONTAINER_ID} .testimonial {
-      margin-bottom: 20px;
-    }
-    #${CONTAINER_ID} .testimonial:last-child {
-      margin-bottom: 0;
+      height: 30px;
+      color: blue;
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 100%;
     }
     #${CONTAINER_ID} .stars {
       color: #FFD700;
@@ -41,11 +35,6 @@
     #${CONTAINER_ID} .review-text {
       font-size: 14px;
       margin-bottom: 5px;
-    }
-    #${CONTAINER_ID} .reviewer {
-      font-weight: bold;
-      font-size: 13px;
-      color: #555;
     }
   `;
   document.head.appendChild(style);
@@ -68,8 +57,11 @@
 
       const data = await response.json();
       const getReview = data.getReview;
-      console.log(data.getReview);
-      renderReviews(getReview);
+
+      // Filtering the reviews based on the required IDs
+      const filterData = getReview.filter((review) => id.includes(review.id));
+
+      renderReviews(filterData);
     } catch (error) {
       console.error("Failed to load testimonials:", error);
       container.innerHTML = "<p>Unable to load testimonials at this time.</p>";
@@ -86,15 +78,13 @@
     const testimonialsHTML = reviews
       .map(
         (user) => `
-      <div class="testimonial">
+      <div class="main">
         <div> 
         <p class="first-letter">${user.name[0]}</p>
         <span> ${user.name} </span> 
          </div>
         <div class="stars"> ${"★".repeat(user.stars)} </div>
         <div class="review-text"> ${user.review} </div>
-
-
       </div>
     `
       )
