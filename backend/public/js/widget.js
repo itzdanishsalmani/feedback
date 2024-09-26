@@ -1,9 +1,18 @@
 (function () {
-  // Configuration
-  let id = [3, 2]; // Assuming these are the required IDs you want to filter
-
+  // required reviewId for testimonial
+  
   const CONTAINER_ID = `testimonial-widget-container`;
-  const spacename = "john"; // Make sure this value is defined correctly
+  
+  const reviewIdElement = document.querySelector("[id^='reviewId-']");
+  const reviewIdString = reviewIdElement.id.match(/\[(.*?)\]/)[1]; // Extract the string inside the brackets
+  let reviewIds = reviewIdString.split(",").map(Number); // Convert the string to an array of numbers
+
+  const spacenameElement = document.querySelector("[id^='spacename-']");
+  const spacenameString = spacenameElement.id.match(/\[(.*?)\]/)[1]; // Extract the string inside the brackets
+  let spacename = spacenameString // Convert the string to an array of numbers
+
+  let id = reviewIds
+
   const API_URL = `http://localhost:3000/testimonial/${spacename}`;
 
   const style = document.createElement("style");

@@ -17,7 +17,7 @@ interface CardsProps {
 
 const Cards: React.FC<CardsProps> = ({ reviews }) => {
   return (
-    <div className="mt-4 text-slate-200 bg-neutral-800 rounded-lg p-4 font-medium">
+    <div className="mt-4 ">
       {reviews.length === 0 ? (
         <p>No reviews to display.</p>
       ) : (
@@ -35,10 +35,8 @@ interface ReviewCardProps {
 
 const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
   return (
-    <div className="mb-6">
-      <div className="text-2xl text-right" onClick={() => {}}>
-        ★
-      </div>
+    <div className="mt-8 text-slate-200 bg-neutral-800 rounded-lg p-4 font-medium">
+      <div className="text-2xl text-right">★</div>
       <div className="flex items-center">
         <span className="text-yellow-500 text-2xl">
           {"★".repeat(review.stars)}
@@ -53,7 +51,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
 };
 
 interface OptionsProps {
-  setWall : (argument:boolean) => void;
+  setWall: (argument: boolean) => void;
 }
 
 // Define the Options component
@@ -74,6 +72,9 @@ export function Summary() {
   const [space, setSpace] = useState<string>("");
   const [showWall, setWall] = useState<boolean>(false);
 
+  // Simple variables
+  const spacename = "john";
+  const reviewId = [1, 2, 3];
   useEffect(() => {
     fetchData();
   }, []);
@@ -103,7 +104,7 @@ export function Summary() {
   }
 
   return (
-    <div className="relative bg-neutral-900 w-screen h-screen">
+    <div className="relative bg-neutral-900 w-screen min-h-screen">
       <div className="max-w-[1200px] mx-auto">
         <NavBarOther />
 
@@ -121,44 +122,35 @@ export function Summary() {
                 onClick={() => setWall(false)}
               >
                 close
-
               </div>
               <div className="text-center">
                 <div className="mt-4 text-3xl font-semibold">
                   Embed a Wall of Love
                 </div>
+
                 <div className="mt-4">Customize your Wall of Love</div>
 
-                <div className="mt-4">
-                  <p>
-                    let id = testimonialId;
-                  <div id='{`testimonial-widget-container${id}`}' ></div>
-                    <script
-                      type="text/javascript"
-                      src="http://localhost:3000/js/widget.js"
-                    ></script>
-                    const userId = 1 
-                    const theme = 2
-                    <iframe
-                      id="{`${userId}`+`${theme}`}"
-                      src="https://embed-v2.testimonial.to/carousel/all/hello6?theme=dark&autoplay=on&showmore=on&one-row=on&hideDate=on&same-height=off&tag=all&arrowColor=9BA9B4"
-                      width="100%"
-                    ></iframe>
-                  </p>
-                  code come here
-                </div>
-              </div>
+                <pre className="h-36 bg-neutral-800 text-slate-300">
+                  {`
+<div id="testimonial-widget-container"></div>
+<div id="spacename-${spacename}"></div>
+<div id="reviewId-${reviewId.join(",")}"></div>
+<script src="http://localhost:3000/js/widget.js"></script>
+                `}
 
-              <div className="mt-4">
-                <input type="checkbox" name="" id="dark" /> Dark theme
-                <br />
-                <input type="checkbox" name="" id="date" /> Show date
+                </pre>
               </div>
+            </div>
+
+            <div className="mt-4">
+              <input type="checkbox" name="" id="dark" /> Dark theme
+              <br />
+              <input type="checkbox" name="" id="date" /> Show date
             </div>
           </div>
         )}
 
-{/* overlap ended */}
+        {/* overlap ended */}
 
         <div className="mt-4">{space}</div>
         <div className="mt-4">
