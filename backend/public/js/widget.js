@@ -17,18 +17,28 @@
 
   const style = document.createElement("style");
   style.innerHTML = `
-    #${CONTAINER_ID} .main {
-      max-width: 400px;
-      max-height:300px;
-      margin:20px;
+
+   #${CONTAINER_ID} .parent {
+      display: flex;
+      height:100%;
+      flex-wrap: wrap;
+      justify-content: flex-left;
+      align-items: center;
+  }
+
+  #${CONTAINER_ID} .main {
+      width: 300px;
+      margin: 20px;
       padding: 10px;
       font-family: Arial, sans-serif;
       background-color: #FFF;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+  }
 
-    #${CONTAINER_ID} .first-letter {
+  #${CONTAINER_ID} .first-letter {
       width: 30px;
       height: 30px;
       color: blue;
@@ -37,18 +47,18 @@
       justify-content: center;
       align-items: center;
       border-radius: 100%;
-    }
-    #${CONTAINER_ID} .stars {
-      color: #FFD700;
+  }
+
+  #${CONTAINER_ID} .stars {
+      color: #FACC15;
       margin-bottom: 5px;
-    }
-    #${CONTAINER_ID} .review-text {
+  }
+
+  #${CONTAINER_ID} .review-text {
       font-size: 14px;
       margin-bottom: 5px;
-;
+  }`;
 
-    }
-  `;
   document.head.appendChild(style);
 
   // Create the container if it doesn't exist
@@ -90,6 +100,7 @@
     const testimonialsHTML = reviews
       .map(
         (user) => `
+        <div class="parent">
       <div class="main">
         <div> 
         <p class="first-letter">${user.name[0]}</p>
@@ -97,6 +108,7 @@
          </div>
         <div class="stars"> ${"★".repeat(user.stars)} </div>
         <div class="review-text"> ${user.review} </div>
+      </div>
       </div>
     `
       )

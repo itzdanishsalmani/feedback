@@ -19,19 +19,15 @@ export async function authMiddleware(
 ) {
   const authHeader = req.headers.authorization;
 
-  console.log(authHeader)
+  const extractedToken = authHeader?.split(" ")[1];
 
-  const extractedToken = authHeader?.split(' ')[1];
-
-  console.log(extractedToken);
-
-  if(extractedToken==='null'){
+  if (extractedToken === "null") {
     return res.status(401).json({
-      error:"Unauthorized user"
-    })
+      error: "Unauthorized user",
+    });
   }
 
-  const token = extractedToken
+  const token = extractedToken;
 
   if (!token) {
     return res.status(401).json({
@@ -41,10 +37,10 @@ export async function authMiddleware(
 
   const decodedValue = jwt.verify(token, SECRET_KEY) as MyJwtPayload;
 
-  if(!decodedValue){
+  if (!decodedValue) {
     return res.status(401).json({
-      error:"Unauthorized"
-    })
+      error: "Unauthorized",
+    });
   }
 
   req.body.user = decodedValue;

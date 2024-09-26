@@ -37,18 +37,34 @@ interface ReviewCardProps {
   setLike: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const ReviewCard: React.FC<ReviewCardProps> = ({ review, setLike }) => {
-  
+const ReviewCard: React.FC<ReviewCardProps> = ({ review,like, setLike }) => {
+  const isLiked = like.includes(review.id);
   return (
     <div className="mt-8 text-slate-200 bg-neutral-800 rounded-lg p-4 font-medium">
-      <div className="text-2xl text-right"   onClick={() => setLike((prev: number[]) => [...prev, review.id])}>★</div>
+      
+      <div
+        className={`text-2xl text-right cursor-pointer ${
+          isLiked ? "text-yellow-400" : "text-white"
+        }`}
+        onClick={() => {
+          if (isLiked) {
+            // Remove from likes if already liked
+            setLike((prev) => prev.filter((id) => id !== review.id));
+          } else {
+            // Add to likes if not already liked
+            setLike((prev) => [...prev, review.id]);
+          }
+        }}
+      >
+        ★
+      </div>
       <div className="flex items-center">
-        <span className="text-yellow-500 text-2xl">
+        <span className="text-yellow-400 text-2xl">
           {"★".repeat(review.stars)}
         </span>
         <span className="ml-2 text-lg">{review.stars} Stars</span>
       </div>
-      <div className="mt-4">{review.review}</div>
+      <div className="mt-4 break-words">{review.review}</div>
       <div className="mt-4">Name: {review.name}</div>
       <div className="mt-4">Email: {review.email} </div>
     </div>
@@ -82,7 +98,7 @@ export function Summary() {
   //variable to store the spacename and reviewId to create a embedded code
 
   const spacename = space.toLocaleLowerCase();
-  const reviewId = [1, 2, 3];
+  const reviewId = like;
   
   useEffect(() => {
     fetchData();
@@ -161,14 +177,7 @@ export function Summary() {
 
         {/* overlap ended */}
 
-        {
-          like && (
-            <div className="bg-white text-black text-2xl"> 
-              Hello
-            </div>
-          )
-        }
-
+     
         <div className="mt-4">{space}</div>
         <div className="mt-4">
           Space public URL:{" "}

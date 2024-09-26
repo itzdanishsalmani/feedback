@@ -7,7 +7,7 @@ export function RatingReview({ rating, setRating }:any) {
           <span
             style={{
               cursor: 'pointer',
-              color: rating >= star ? 'gold' : 'gray',
+              color: rating >= star ? '#FACC15' : 'gray',
               fontSize: `30px`,
             }}
             onClick={() => {
@@ -22,11 +22,3 @@ export function RatingReview({ rating, setRating }:any) {
     </div>
   )
 }
-
-// export function Validate() {
-//   const navigate = useNavigate()
-
-//   if(!localStorage.getItem("access_token"))
-//     toast("Sign in required")
-//     navigate("/signin")    
-// }
