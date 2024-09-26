@@ -28,7 +28,7 @@ async function main() {
   // Create Userspaces
   const userspace1 = await prisma.userspace.create({
     data: {
-      spacename: 'John',
+      spacename: 'john',
       title: 'John\'s Awesome Space',
       description: 'A description of John\'s space.',
       questions: ['What is your favorite color?', 'How did you hear about us?'],
@@ -38,7 +38,7 @@ async function main() {
 
   const userspace2 = await prisma.userspace.create({
     data: {
-      spacename: 'Jane',
+      spacename: 'jane',
       title: 'Jane\'s Creative Space',
       description: 'A description of Jane\'s space.',
       questions: ['What motivates you?', 'What projects are you working on?'],

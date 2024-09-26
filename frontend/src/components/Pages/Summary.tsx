@@ -13,16 +13,18 @@ interface Review {
 
 interface CardsProps {
   reviews: Review[];
+  like: number[];
+  setLike: React.Dispatch<React.SetStateAction<number[]>>; 
 }
 
-const Cards: React.FC<CardsProps> = ({ reviews }) => {
+const Cards: React.FC<CardsProps> = ({ reviews, like, setLike }) => {
   return (
     <div className="mt-4 ">
       {reviews.length === 0 ? (
         <p>No reviews to display.</p>
       ) : (
         reviews.map((review: Review) => (
-          <ReviewCard key={review.id} review={review} />
+          <ReviewCard like={like} setLike={setLike} key={review.id} review={review} />
         ))
       )}
     </div>
@@ -31,12 +33,15 @@ const Cards: React.FC<CardsProps> = ({ reviews }) => {
 
 interface ReviewCardProps {
   review: Review;
+  like: number[];
+  setLike: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
+const ReviewCard: React.FC<ReviewCardProps> = ({ review, setLike }) => {
+  
   return (
     <div className="mt-8 text-slate-200 bg-neutral-800 rounded-lg p-4 font-medium">
-      <div className="text-2xl text-right">★</div>
+      <div className="text-2xl text-right"   onClick={() => setLike((prev: number[]) => [...prev, review.id])}>★</div>
       <div className="flex items-center">
         <span className="text-yellow-500 text-2xl">
           {"★".repeat(review.stars)}
@@ -72,12 +77,16 @@ export function Summary() {
   const [space, setSpace] = useState<string>("");
   const [showWall, setWall] = useState<boolean>(false);
 
-  // Simple variables
-  const spacename = "john";
+  const [like,setLike] = useState<number[]>([])
+
+  //variable to store the spacename and reviewId to create a embedded code
+
+  const spacename = space.toLocaleLowerCase();
   const reviewId = [1, 2, 3];
+  
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [reviews]);
 
   async function fetchData() {
     try {
@@ -92,7 +101,6 @@ export function Summary() {
       ) {
         setReviews(res.data.getReview);
         setSpace(res.data.space.spacename);
-        console.log(res.data.space.spacename);
       } else {
         console.log(res.data);
         toast(res.data.error + "No reviews found");
@@ -102,6 +110,7 @@ export function Summary() {
       toast("An error occurred while fetching reviews");
     }
   }
+  
 
   return (
     <div className="relative bg-neutral-900 w-screen min-h-screen">
@@ -133,8 +142,8 @@ export function Summary() {
                 <pre className="h-36 bg-neutral-800 text-slate-300">
                   {`
 <div id="testimonial-widget-container"></div>
-<div id="spacename-${spacename}"></div>
-<div id="reviewId-${reviewId.join(",")}"></div>
+<div id="spacename-[${spacename}]"></div>
+<div id="reviewId-[${reviewId}]"></div>
 <script src="http://localhost:3000/js/widget.js"></script>
                 `}
 
@@ -142,7 +151,7 @@ export function Summary() {
               </div>
             </div>
 
-            <div className="mt-4">
+            <div className="mt-4 text-black">
               <input type="checkbox" name="" id="dark" /> Dark theme
               <br />
               <input type="checkbox" name="" id="date" /> Show date
@@ -151,6 +160,14 @@ export function Summary() {
         )}
 
         {/* overlap ended */}
+
+        {
+          like && (
+            <div className="bg-white text-black text-2xl"> 
+              Hello
+            </div>
+          )
+        }
 
         <div className="mt-4">{space}</div>
         <div className="mt-4">
@@ -170,7 +187,7 @@ export function Summary() {
             <Options setWall={setWall} />
           </div>
           <div className="col-span-8">
-            <Cards reviews={reviews} />
+            <Cards like={like} setLike={setLike} reviews={reviews} />
           </div>
         </div>
       </div>

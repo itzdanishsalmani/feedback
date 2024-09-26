@@ -18,12 +18,13 @@
   const style = document.createElement("style");
   style.innerHTML = `
     #${CONTAINER_ID} .main {
+      max-width: 400px;
+      max-height:300px;
       margin:20px;
+      padding: 10px;
       font-family: Arial, sans-serif;
       background-color: #FFF;
-      padding: 20px;
       border-radius: 8px;
-      max-width: 400px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
@@ -44,6 +45,8 @@
     #${CONTAINER_ID} .review-text {
       font-size: 14px;
       margin-bottom: 5px;
+;
+
     }
   `;
   document.head.appendChild(style);

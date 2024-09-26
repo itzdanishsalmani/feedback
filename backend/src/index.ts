@@ -221,7 +221,7 @@ app.post("/createspace", authMiddleware, async (req, res) => {
   try {
     const space = await prisma.userspace.create({
       data: {
-        spacename: spacename,
+        spacename: spacename.toLowerCase(),
         title: title,
         description: description,
         questions: questions,
