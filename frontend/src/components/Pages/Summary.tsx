@@ -95,10 +95,13 @@ export function Summary() {
 
   const [like,setLike] = useState<number[]>([])
 
+  const [defaultTheme,setTheme] = useState<string>("light")
+
   //variable to store the spacename and reviewId to create a embedded code
 
   const spacename = space.toLocaleLowerCase();
   const reviewId = like;
+  const theme = defaultTheme;
   
   useEffect(() => {
     fetchData();
@@ -127,7 +130,6 @@ export function Summary() {
     }
   }
   
-
   return (
     <div className="relative bg-neutral-900 w-screen min-h-screen">
       <div className="max-w-[1200px] mx-auto">
@@ -138,8 +140,10 @@ export function Summary() {
         </div>
 
         {/* wall of love overlap Cards  */}
+        
+        {showWall && (  
+          <div>
 
-        {showWall && (
           <div className="absolute bg-white top-20 left-60 right-60 rounded-lg">
             <div className="h-fit text-black">
               <div
@@ -158,8 +162,7 @@ export function Summary() {
                 <pre className="h-36 bg-neutral-800 text-slate-300">
                   {`
 <div id="testimonial-widget-container"></div>
-<div id="spacename-[${spacename}]"></div>
-<div id="reviewId-[${reviewId}]"></div>
+<div id="reviewId-[${reviewId}][${spacename}][${theme}]"></div>
 <script src="http://localhost:3000/js/widget.js"></script>
                 `}
 
@@ -167,11 +170,34 @@ export function Summary() {
               </div>
             </div>
 
-            <div className="mt-4 text-black">
-              <input type="checkbox" name="" id="dark" /> Dark theme
+            <div className="mt-4 text-black">  
+              <div>            
+              <label>
+                  <input
+                    type="radio"
+                    name="theme"
+                    checked={defaultTheme === "light"}
+                    onChange={() => setTheme("light")}
+                  />{" "}
+                  Light theme
+                </label>
+                <label className="ml-4">
+                  <input
+                    type="radio"
+                    name="theme"
+                    checked={defaultTheme === "dark"}
+                    onChange={() => setTheme("dark")}
+                  />{" "}
+                  Dark theme
+                </label>
+
+              </div>
               <br />
               <input type="checkbox" name="" id="date" /> Show date
             </div>
+            </div>
+
+
           </div>
         )}
 

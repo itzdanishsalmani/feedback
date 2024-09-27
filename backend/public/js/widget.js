@@ -4,60 +4,129 @@
   const CONTAINER_ID = `testimonial-widget-container`;
   
   const reviewIdElement = document.querySelector("[id^='reviewId-']");
-  const reviewIdString = reviewIdElement.id.match(/\[(.*?)\]/)[1]; // Extract the string inside the brackets
-  let reviewIds = reviewIdString.split(",").map(Number); // Convert the string to an array of numbers
+  const idParts = reviewIdElement.id.match(/reviewId-\[(\d+)\]\[(\w+)\]\[(\w+)\]/); // Match all parts of the ID
 
-  const spacenameElement = document.querySelector("[id^='spacename-']");
-  const spacenameString = spacenameElement.id.match(/\[(.*?)\]/)[1]; // Extract the string inside the brackets
-  let spacename = spacenameString // Convert the string to an array of numbers
-
-  let id = reviewIds
-
+  let reviewIds = [Number(idParts[1])]
+  let id = reviewIds;
+  let spacename = idParts[2]
+  let theme = idParts[3] 
   const API_URL = `http://localhost:3000/testimonial/${spacename}`;
 
   const style = document.createElement("style");
-  style.innerHTML = `
 
-   #${CONTAINER_ID} .parent {
-      display: flex;
-      height:100%;
-      flex-wrap: wrap;
-      justify-content: flex-left;
-      align-items: center;
+  // Check if the theme is dark or light and set the styles accordingly
+  if (theme === "dark") {
+    style.innerHTML = `
+      #${CONTAINER_ID} .parent {
+        display: flex;
+        height:100%;
+        flex-wrap: wrap;
+        justify-content: flex-left;
+        align-items: center;
+      }
+
+      #${CONTAINER_ID} .main {
+        width: 300px;
+        margin: 20px;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #25282c;
+        color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+      }
+
+      #${CONTAINER_ID} .first-letter {
+        width: 40px;
+        height: 40px;
+        font-size:24px;
+        color: white;
+        margin-right:10px;
+        background-color: #5d5dff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 100%;
+      }
+        #${CONTAINER_ID} .name {
+        font-size:20px;
+        }
+
+      #${CONTAINER_ID} .stars {
+        color: #FACC15;
+        margin-top: 10px;
+        font-size:24px;
+      }
+        #${CONTAINER_ID} .line1 {
+        display:flex;
+        align-items:center;
+        }
+
+      #${CONTAINER_ID} .review-text {
+        font-size: 16px;
+        margin-top: 10px;
+      }
+    `;
+
+  } else {
+
+    style.innerHTML = `
+        #${CONTAINER_ID} .parent {
+        display: flex;
+        height:100%;
+        flex-wrap: wrap;
+        justify-content: flex-left;
+        align-items: center;
+      }
+
+      #${CONTAINER_ID} .main {
+        width: 300px;
+        margin: 20px;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #FFF;
+        color: #000;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+      }
+
+      #${CONTAINER_ID} .first-letter {
+        width: 40px;
+        height: 40px;
+        font-size:24px;
+        color: white;
+                margin-right:10px;
+        background-color: #5d5dff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 100%;
+      }
+
+       #${CONTAINER_ID} .name {
+        font-size:20px;
+        }
+
+      #${CONTAINER_ID} .stars {
+        color: #FACC15;
+        margin-top: 10px;
+        font-size:24px;
+      }
+        #${CONTAINER_ID} .line1 {
+        display:flex;
+        align-items:center;
+        }
+
+      #${CONTAINER_ID} .review-text {
+        font-size: 16px;
+        margin-top: 10px;
+      }
+    `;
   }
-
-  #${CONTAINER_ID} .main {
-      width: 300px;
-      margin: 20px;
-      padding: 10px;
-      font-family: Arial, sans-serif;
-      background-color: #FFF;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      overflow-wrap: break-word;
-      word-wrap: break-word;
-  }
-
-  #${CONTAINER_ID} .first-letter {
-      width: 30px;
-      height: 30px;
-      color: blue;
-      background-color: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 100%;
-  }
-
-  #${CONTAINER_ID} .stars {
-      color: #FACC15;
-      margin-bottom: 5px;
-  }
-
-  #${CONTAINER_ID} .review-text {
-      font-size: 14px;
-      margin-bottom: 5px;
-  }`;
 
   document.head.appendChild(style);
 
@@ -102,9 +171,9 @@
         (user) => `
         <div class="parent">
       <div class="main">
-        <div> 
-        <p class="first-letter">${user.name[0]}</p>
-        <span> ${user.name} </span> 
+        <div class="line1"> 
+        <span class="first-letter">${user.name[0]}</span>
+        <span class="name"> ${user.name} </span> 
          </div>
         <div class="stars"> ${"★".repeat(user.stars)} </div>
         <div class="review-text"> ${user.review} </div>
