@@ -1,6 +1,5 @@
 import axios from "../BaseURL/axios";
 import { useState } from "react";
-import { WhiteButton } from "../UI/Button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -34,7 +33,7 @@ export function SignIn() {
   }
 
   return (
-    <div className="bg-black">
+    <div className="bg-neutral-900">
       <div className="flex justify-center items-center h-screen">
         <div className="w-96 p-4 rounded-lg">
           <div className="text-center font-bold text-xl">Log into an account</div>
@@ -45,7 +44,7 @@ export function SignIn() {
             <input
               type="email"
               placeholder="johndoe@example.com"
-              className="mt-4 w-full rounded-lg text-white border p-2 bg-black"
+              className="mt-4 w-full rounded-lg  border p-2 bg-neutral-900"
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
@@ -53,12 +52,17 @@ export function SignIn() {
             <input
               type="password"
               placeholder="password"
-              className="mt-4 w-full rounded-lg text-white border p-2 bg-black"
+              className="mt-4 w-full rounded-lg  border p-2 bg-neutral-900"
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
             />
-            <WhiteButton text="Sign in" onClick={handle} />
+              <button
+              className="mt-4 border bg-white text-black font-bold text-lg p-2 rounded-lg w-full cursor-pointer"
+              onClick={handle}
+              >
+              Sign in
+            </button>            
             <div className="mt-4 text-center">
               By clicking on Continue, you agree to our{" "}
               <span className="underline">Terms of Service</span> and{" "}

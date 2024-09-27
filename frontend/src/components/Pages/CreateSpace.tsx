@@ -29,9 +29,11 @@ export function CreateSpace() {
   }
 
   async function handle() {
-    const res = await axios.post(
-      "/createspace",
-      {
+    try {
+      
+      const res = await axios.post(
+        "/createspace",
+        {
         spacename: spaceName,
         title: title,
         description: customMessage,
@@ -40,18 +42,21 @@ export function CreateSpace() {
       {
        headers:{
         Authorization: `Bearer ${localStorage.getItem("access_token")}`
-       }
       }
-    );
-    if (res.data) {
-      toast(res.data.message);
-      navigate('/summary')
-    } else {
-      toast(res.data.error);
     }
-  }  
+  );
+  if (res.data) {
+    toast(res.data.message);
+    navigate('/summary')
+  } else {
+    toast(res.data.error);
+  }
+} catch (error) {
+  toast("Error while creating")
+}
+}  
   return (
-    <div className="max-w-[1200px] mx-auto text-gray-800">
+    <div className="max-w-[1200px] mx-auto text-gray-800 bg-white">
       <div className="grid grid-cols-1 md:grid-cols-12">
         <div className="preview col-span-5 md:px-12 mt-12 border rounded-lg h-fit pb-12 w-full">
           <div className="flex flex-col items-center">
@@ -80,7 +85,7 @@ export function CreateSpace() {
             </div>
 
             <div className="mt-12 w-full">
-              <button className="border p-2 w-full bg-blue-500 text-white">
+              <button className="border p-2 w-full bg-blue-500 text-lg rounded-lg text-white">
                 Send in text
               </button>
             </div>
@@ -89,7 +94,7 @@ export function CreateSpace() {
 
         <div className="col-span-7 w-10/12 mx-auto">
           <div className="flex flex-col items-center">
-            <div className="mt-12 font-bold text-2xl md:text-3xl text-black ">
+            <div className="mt-12 font-bold text-2xl md:text-3xl text-black">
               Create a new Space
             </div>
 

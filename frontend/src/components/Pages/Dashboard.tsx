@@ -3,6 +3,7 @@ import { Footer } from "../UI/Footer";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "../BaseURL/axios";
+import { toast } from "react-toastify";
 
 export function Dashboard() {
   const[space,setSpace] = useState<string>("")
@@ -13,19 +14,24 @@ export function Dashboard() {
   },[])
 
   async function FetchSpace() {
-    const res = await axios.get("/getspace",{
+    try {
       
+      const res = await axios.get("/getspace",{
+        
         headers:{
-         Authorization: `Bearer ${localStorage.getItem("access_token")}`
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`
         }
-       })
-  
-    if(res.data.spacenames){
-      console.log(res.data)
-      setSpace(res.data.spacenames)
-      setShowCreateSpace(false)
+      })
+      
+      if(res.data.spacenames){
+        console.log(res.data)
+        setSpace(res.data.spacenames)
+        setShowCreateSpace(false)
+      }
+    } catch (error) {
+      toast("Error while fetching details")
     }
-  }
+    }
  
   return (
     <div className="bg-neutral-900">
@@ -48,9 +54,6 @@ function Mid() {
           You will find everything you need to get started to collect
           testimonials and build a wall of love
         </div>
-        <div>
-          <button className="border">Dismiss</button>
-        </div>
       </div>
       <div className="md:pl-24 px-4 md:mt-4">
         <img src="image-6.png" alt="" width={400} />
@@ -65,13 +68,13 @@ function Space({space,showCreateSpace}:any) {
 
   return (
     <div>
-      <div className="mt-24 flex justify-between items-center px-24">
+      <div className="mt-24 flex justify-between items-center px-4 md:px-24 ">
         <div className="cursor-pointer text-3xl underline" onClick={()=>(navigate('/summary'))}>
           {space}
         </div>
         { showCreateSpace &&
         <div>
-          <button className="border" onClick={()=>{
+          <button className="p-2 rounded-lg bg-blue-500 text-white font-semibold " onClick={()=>{
             navigate('/create')
           }}>Create Space</button>
         </div>

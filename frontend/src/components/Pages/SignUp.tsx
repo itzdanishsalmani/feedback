@@ -1,6 +1,5 @@
 import axios from "../BaseURL/axios";
 import { useState } from "react";
-import { WhiteButton } from "../UI/Button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -9,26 +8,28 @@ export function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   async function handle() {
     if (username === "" || email === "" || password === "") {
       toast("Fields cannot be empty");
       return;
-      
     } else {
-      const res = await axios.post("/signup", {
-        username,
-        email,
-        password,
-      }, { withCredentials: true });
-      
+      const res = await axios.post(
+        "/signup",
+        {
+          username,
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
+
       if (res.data) {
-        localStorage.setItem("access_token",res.data.access_token)
+        localStorage.setItem("access_token", res.data.access_token);
         toast(res.data.message);
         console.log(res.data);
-        navigate('/dashboard')
-
+        navigate("/dashboard");
       } else {
         toast(res.data.error);
       }
@@ -36,7 +37,7 @@ export function SignUp() {
   }
 
   return (
-    <div className="bg-black">
+    <div className="bg-neutral-900">
       <div className="flex justify-center items-center h-screen">
         <div className="w-96 p-4 rounded-lg">
           <div className="text-center font-bold text-xl">Create an account</div>
@@ -47,7 +48,7 @@ export function SignUp() {
             <input
               type="text"
               placeholder="John doe"
-              className="w-full rounded-lg text-white border p-2 bg-black"
+              className="w-full rounded-lg  border p-2 bg-neutral-900"
               onChange={(e) => {
                 setUserame(e.target.value);
               }}
@@ -55,7 +56,7 @@ export function SignUp() {
             <input
               type="email"
               placeholder="johndoe@example.com"
-              className="mt-4 w-full rounded-lg text-white border p-2 bg-black"
+              className="mt-4 w-full rounded-lg  border p-2 bg-neutral-900"
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
@@ -63,12 +64,17 @@ export function SignUp() {
             <input
               type="password"
               placeholder="password"
-              className="mt-4 w-full rounded-lg text-white border p-2 bg-black"
+              className="mt-4 w-full rounded-lg  border p-2 bg-neutral-900"
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
             />
-            <WhiteButton text="Sign up" onClick={handle} />
+            <button
+              className="mt-4 border bg-white text-black font-bold text-lg p-2 rounded-lg w-full cursor-pointer"
+              onClick={handle}
+            >
+              Sign up
+            </button>
             <div className="mt-4 text-center">
               By clicking on Continue, you agree to our{" "}
               <span className="underline">Terms of Service</span> and{" "}

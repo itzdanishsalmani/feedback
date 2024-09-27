@@ -17,16 +17,3 @@ export const BlueButton = ({ text, onClick }: ButtonProps) => {
     </>
   );
 };
-
-export const WhiteButton = ({ text, onClick }: ButtonProps) => {
-  return (
-    <>
-      <button
-        className="border rounded-lg font-bold text-black bg-white p-2"
-        onClick={onClick}
-      >
-        {text}
-      </button>
-    </>
-  );
-};

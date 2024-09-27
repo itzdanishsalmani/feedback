@@ -22,7 +22,7 @@ export const NavBar = () => {
         <div className="hidden md:flex flex-row space-x-8 items-center cursor-pointer">
           <div onClick={() => navigate("/signin")}> Sign in </div>
           <div
-            className=" bg-blue-700 p-1.5 rounded-md"
+            className=" bg-blue-700 p-1.5 rounded-md cursor-pointer"
             onClick={() => navigate("/signup")}
           >
             {" "}
