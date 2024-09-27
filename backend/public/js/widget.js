@@ -3,18 +3,17 @@
   
   const CONTAINER_ID = `testimonial-widget-container`;
   
-  const reviewIdElement = document.querySelector("[id^='reviewId-']");
-  const idParts = reviewIdElement.id.match(/reviewId-\[(.*?)\]\[(\w+)\]\[(\w+)\]/); // Match all parts of the ID
+  const reviewIdElement = document.querySelector("[id^='main-']");
+  const idParts = reviewIdElement.id.match(/main-\[(.*?)\]\[(\w+)\]\[(\w+)\]/); // Match all parts of the ID
 
   let reviewIds = idParts[1].split(',').map(Number);
-  let id = reviewIds;
   let spacename = idParts[2]
   let theme = idParts[3] 
   const API_URL = `http://localhost:3000/testimonial/${spacename}`;
 
   const style = document.createElement("style");
 
-  // Check if the theme is dark or light and set the styles accordingly
+  // Check for dark theme
   if (theme === "dark") {
     style.innerHTML = `
       #${CONTAINER_ID} .parent {
@@ -146,7 +145,7 @@
       const getReview = data.getReview;
 
       // Filtering the reviews based on the required IDs
-      const filterData = getReview.filter((review) => id.includes(review.id));
+      const filterData = getReview.filter((review) => reviewIds.includes(review.id));
 
       renderReviews(filterData);
     } catch (error) {

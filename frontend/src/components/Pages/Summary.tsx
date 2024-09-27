@@ -14,7 +14,7 @@ interface Review {
 interface CardsProps {
   reviews: Review[];
   like: number[];
-  setLike: React.Dispatch<React.SetStateAction<number[]>>; 
+  setLike: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
 const Cards: React.FC<CardsProps> = ({ reviews, like, setLike }) => {
@@ -24,7 +24,12 @@ const Cards: React.FC<CardsProps> = ({ reviews, like, setLike }) => {
         <p>No reviews to display.</p>
       ) : (
         reviews.map((review: Review) => (
-          <ReviewCard like={like} setLike={setLike} key={review.id} review={review} />
+          <ReviewCard
+            like={like}
+            setLike={setLike}
+            key={review.id}
+            review={review}
+          />
         ))
       )}
     </div>
@@ -37,14 +42,13 @@ interface ReviewCardProps {
   setLike: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const ReviewCard: React.FC<ReviewCardProps> = ({ review,like, setLike }) => {
+const ReviewCard: React.FC<ReviewCardProps> = ({ review, like, setLike }) => {
   const isLiked = like.includes(review.id);
   return (
     <div className="mt-8 text-slate-200 bg-neutral-800 rounded-lg p-4 font-medium">
-      
       <div
-        className={`text-2xl text-right cursor-pointer ${
-          isLiked ? "text-yellow-400" : "text-slate-300"
+        className={`text-4xl text-right cursor-pointer ${
+          isLiked ? "text-red-400" : "text-slate-300"
         }`}
         onClick={() => {
           if (isLiked) {
@@ -56,7 +60,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review,like, setLike }) => {
           }
         }}
       >
-        ★
+        ♥
       </div>
       <div className="flex items-center">
         <span className="text-yellow-400 text-2xl">
@@ -93,16 +97,17 @@ export function Summary() {
   const [space, setSpace] = useState<string>("");
   const [showWall, setWall] = useState<boolean>(false);
 
-  const [like,setLike] = useState<number[]>([])
+  const [like, setLike] = useState<number[]>([]);
 
-  const [defaultTheme,setTheme] = useState<string>("light")
+  const [defaultTheme, setTheme] = useState<string>("light");
+  const [copied, setcopied] = useState<boolean>(false);
 
   //variable to store the spacename and reviewId to create a embedded code
 
   const spacename = space.toLocaleLowerCase();
   const reviewId = like;
   const theme = defaultTheme;
-  
+
   useEffect(() => {
     fetchData();
   }, [reviews]);
@@ -129,7 +134,16 @@ export function Summary() {
       toast("An error occurred while fetching reviews");
     }
   }
-  
+
+  const copyToClipboard = (codeData: string) => {
+    setcopied(true);
+    navigator.clipboard.writeText(codeData).then(() => {
+      setTimeout(() => {
+        setcopied(false);
+      }, 500);
+    });
+  };
+
   return (
     <div className="relative bg-neutral-900 w-screen min-h-screen">
       <div className="max-w-[1200px] mx-auto px-4 md:px-0">
@@ -140,70 +154,83 @@ export function Summary() {
         </div>
 
         {/* wall of love overlap Cards  */}
-        
-        {showWall && (  
+
+        {showWall && (
           <div>
-
-          <div className="px-2 md:p-4 md:absolute bg-white md:top-20 md:left-60 md:right-60 rounded-lg">
-            <div className="h-fit text-black">
-              <div
-                className="text-right cursor-pointer"
-                onClick={() => setWall(false)}
-              >
-                close
-              </div>
-              <div className="text-center">
-                <div className="mt-4 text-3xl font-semibold">
-                  Embed a Wall of Love
+            <div className="px-2 md:p-4 md:absolute bg-white md:top-20 md:left-60 md:right-60 rounded-lg">
+              <div className="h-fit text-black">
+                <div
+                  className="text-right cursor-pointer"
+                  onClick={() => setWall(false)}
+                >
+                  close
                 </div>
+                <div className="text-center">
+                  <div className="mt-4 text-3xl font-semibold">
+                    Embed a Wall of Love
+                  </div>
 
-                <div className="mt-4">Customize your Wall of Love</div>
+                  <div className="mt-4">Customize your Wall of Love</div>
 
-                <pre className="mt-4 h-24 md:h-36 text-sm md:text-base bg-neutral-800 text-slate-300 overflow-scroll">
-                  {`
+                  <pre className="mt-4 h-24 md:h-36 text-sm md:text-base bg-neutral-800 text-slate-300 overflow-scroll relative">
+                    <div
+                      className="absolute border border-black rounded-lg mt-2 ml-2 px-2 py-1 w-fit right-10 cursor-pointer"
+                      onClick={() =>
+                        copyToClipboard(`
 <div id="testimonial-widget-container"></div>
-<div id="reviewId-[${reviewId}][${spacename}][${theme}]"></div>
+<div id="main-[${reviewId}][${spacename}][${theme}]"></div>
+<script src="http://localhost:3000/js/widget.js"></script>`)
+                      }
+                    >
+                      {copied ? (
+                        <img src="/vector3.svg" alt="Copied" width={25}/>
+                      ) : (
+                        <img src="/vector2.svg" alt="Copy" width={25} />
+                      )}
+                    </div>
+                    <div className=" mt-2">
+                      {`
+<div id="testimonial-widget-container"></div>
+<div id="main-[${reviewId}][${spacename}][${theme}]"></div>
 <script src="http://localhost:3000/js/widget.js"></script>
-                `}
+    `}
+                    </div>
+                  </pre>
+                </div>
+              </div>
 
-                </pre>
+              <div className="mt-4 text-black">
+                <div>
+                  <label>
+                    <input
+                      type="radio"
+                      name="theme"
+                      checked={defaultTheme === "light"}
+                      onChange={() => setTheme("light")}
+                    />{" "}
+                    Light theme
+                  </label>
+                </div>
+                <div>
+                  <label className="mt-4">
+                    <input
+                      type="radio"
+                      name="theme"
+                      checked={defaultTheme === "dark"}
+                      onChange={() => setTheme("dark")}
+                    />{" "}
+                    Dark theme
+                  </label>
+                </div>
+                <br />
+                <input type="checkbox" name="" id="date" /> Show date
               </div>
             </div>
-
-            <div className="mt-4 text-black">  
-              <div>            
-              <label>
-                  <input
-                    type="radio"
-                    name="theme"
-                    checked={defaultTheme === "light"}
-                    onChange={() => setTheme("light")}
-                  />{" "}
-                  Light theme
-                </label>
-                <label className="ml-4">
-                  <input
-                    type="radio"
-                    name="theme"
-                    checked={defaultTheme === "dark"}
-                    onChange={() => setTheme("dark")}
-                  />{" "}
-                  Dark theme
-                </label>
-
-              </div>
-              <br />
-              <input type="checkbox" name="" id="date" /> Show date
-            </div>
-            </div>
-
-
           </div>
         )}
 
         {/* overlap ended */}
 
-     
         <div className="mt-4">{space}</div>
         <div className="mt-4">
           Space public URL:{" "}
