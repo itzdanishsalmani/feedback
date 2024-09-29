@@ -150,7 +150,7 @@ export function Summary() {
         <NavBarOther />
 
         <div className="mt-4">
-          <img src="logo.svg" alt="Logo" width={100} />
+          <img src="logo.png" alt="Logo" width={50} />
         </div>
 
         {/* wall of love overlap Cards  */}

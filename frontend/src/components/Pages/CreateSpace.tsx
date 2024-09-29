@@ -10,7 +10,7 @@ export function CreateSpace() {
   const [title, setTitle] = useState<string>("");
   const [customMessage, setCustomMessage] = useState<string>("");
   const [allQuestions, setAllQuestions] = useState<string[]>([""]);
-  const [showGlass, setShowGlass] = useState<boolean>(true);
+  const [showGlass, setShowGlass] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -78,7 +78,7 @@ export function CreateSpace() {
                   Live preview - Testimonial Page
                 </div>
                 <div className="mt-12">
-                  <img src="logo.svg" alt="" className="bg-black" />
+                  <img src="logo.png" alt="" width={100} className="" />
                 </div>
                 <div className="mt-4 text-2xl md:text-3xl font-bold text-gray-600">
                   {title === "" ? "Header goes here..." : title}

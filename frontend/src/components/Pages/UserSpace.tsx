@@ -118,7 +118,7 @@ export function UserSpace() {
             <div className="text-center">
               <div>
                 <img
-                  src="logo.svg"
+                  src="logo.png"
                   alt="logo"
                   width={100}
                   className="mx-auto mb-4"
@@ -190,12 +190,12 @@ export function UserSpace() {
       {/* Main page */}
 
       <div className=" pt-12 pl-12">
-        <img src="logo.svg" alt="" width={200} />
+        <img src="logo.png" alt="" width={200} />
       </div>
 
       <div className="text-center">
         <div className="flex justify-center">
-          <img src="logo.svg" alt="" width={150} />
+          <img src="logo.png" alt="" width={150} />
         </div>
 
         <div className="mt-12 font-bold text-4xl">{title}</div>

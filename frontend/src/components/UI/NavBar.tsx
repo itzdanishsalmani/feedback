@@ -9,7 +9,7 @@ export const NavBar = () => {
     <div className="max-w-[1200px] mx-auto">
       <div className="flex justify-between items-center ">
         <div>
-          <img src="/logo.svg" alt="" width={150} />
+          <img src="/logo.png" alt="" width={50} />
         </div>
 
         <div className="hidden md:flex flex-row space-x-8 ">

@@ -22,7 +22,7 @@ export const NineCardSection = () => {
             </div>
 
             <div className="mt-6 md:mt-12">
-                <img src="logo.svg" alt="" width={200} />
+                <img src="logo.png" alt="" width={50} /> Testimonial
             </div>
 
             <div className="mt-12 h-0.1 w-full bg-slate-400 border">

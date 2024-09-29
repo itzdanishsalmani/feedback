@@ -5,7 +5,7 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3">
           <div>
             <div>
-              <img src="logo.svg" alt="" width={150} />
+              <img src="logo.png" alt="" width={50} />
             </div>
             <div className="mt-4">
               The easiest solution to getting text and video testimonials from
