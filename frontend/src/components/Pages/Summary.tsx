@@ -161,20 +161,23 @@ export function Summary() {
               <div className="h-fit text-black">
                 <div
                   className="text-right cursor-pointer"
-                  onClick={() => setWall(false)}
-                >
-                  close
+                  onClick={() => setWall(false)}>
+
+                  <div className="absolute md:right-10 right-4">
+                    <img src="close.svg" alt="close_icon" />
+                  </div>
+                  
                 </div>
                 <div className="text-center">
-                  <div className="mt-4 text-3xl font-semibold">
+                  <div className="pt-2 mt-4 text-2xl md:text-3xl font-semibold">
                     Embed a Wall of Love
                   </div>
 
                   <div className="mt-4">Customize your Wall of Love</div>
 
-                  <pre className="mt-4 h-24 md:h-36 text-sm md:text-base bg-neutral-800 text-slate-300 overflow-scroll relative">
+                  <pre className="mt-4 h-36 text-sm md:text-base bg-neutral-700 text-slate-300 rounded-md overflow-scroll relative">
                     <div
-                      className="absolute border border-black rounded-lg mt-2 ml-2 px-2 py-1 w-fit right-10 cursor-pointer"
+                      className="absolute rounded-lg border mt-2 px-2 py-1 text-sm w-fit right-2 md:right-5 cursor-pointer"
                       onClick={() =>
                         copyToClipboard(`
 <div id="testimonial-widget-container"></div>
@@ -183,12 +186,16 @@ export function Summary() {
                       }
                     >
                       {copied ? (
-                        <img src="/vector3.svg" alt="Copied" width={25}/>
+                        <div className="flex items-center">
+                        <img src="/vector3.svg" alt="Copied" width={20} />copied
+                        </div>
                       ) : (
-                        <img src="/vector2.svg" alt="Copy" width={25} />
+                        <div className="flex items-center">
+                        <img src="/vector2.svg" alt="Copy" width={20} />copy code
+                        </div>
                       )}
                     </div>
-                    <div className=" mt-2">
+                    <div className="mt-8 md:mt-2 ">
                       {`
 <div id="testimonial-widget-container"></div>
 <div id="main-[${reviewId}][${spacename}][${theme}]"></div>

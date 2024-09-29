@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
 import axios from "../BaseURL/axios";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { RatingReview } from "../Utils/RatingReview";
-import { toast } from "react-toastify"
+import { toast } from "react-toastify";
+import { ImageEffect } from "../UI/ImageEffect";
 
 export function UserSpace() {
-  const [rating, setRating] = useState(0)
+  const [rating, setRating] = useState<number>(0);
   const { spacename } = useParams();
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [review, setReview] = useState<string>("");
@@ -13,49 +14,68 @@ export function UserSpace() {
   const [name, setName] = useState<string>("");
   const [spaceNotFound, setSpaceNotFound] = useState<boolean>(false);
 
-    useEffect(()=>{ 
-    async function check() {
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState("");
+  const [questions, setQuestions] = useState<string[]>([]);
+
+  const [showGlass, setShowGlass] = useState<boolean>(false);
+  
+  useEffect(() => {
+    async function urlCheck() {
       try {
-        const res = await axios.get(
-          `/publicspacename/${spacename}`
-        );
+        const res = await axios.get(`/userspace/${spacename}`);
+        console.log(res.data);
+        if (res.data) {
+          setTitle(res.data.userWithSpacename.title);
+          setDescription(res.data.userWithSpacename.description);
+          setQuestions(res.data.userWithSpacename.questions);
+        }
         if (res.data.error) {
-          setSpaceNotFound(true); 
+          setSpaceNotFound(true);
         }
       } catch (error) {
         console.error("API call failed:", error);
-        setSpaceNotFound(true); 
+        setSpaceNotFound(true);
       }
     }
 
-    check();
+    urlCheck();
   }, [spacename]);
 
-  async function request() {
-    const res = await axios.post(
-      `/review`,
-      {
-        review: review,
-        email: email,
-        name: name,
-        stars: rating,
-        spacename: spacename,
-      },
-      {
-        headers:{
-         Authorization: `Bearer ${localStorage.getItem("access_token")}`
+  async function sendReview() {
+    try {
+
+      if( review==="" || email === "" || name ==="" ){
+        return toast("Fields cannot be empty")
+      }
+
+      const res = await axios.post(
+        `/createreview`,
+        {
+          review: review,
+          email: email,
+          name: name,
+          stars: rating,
+          spacename: spacename,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
         }
-       }
-    );
-    if (res.data) {
-      console.log(res.data);
-      toast(res.data.message);
-    }else{
-      toast(res.data.error)
+      );
+      if (res.data.message) {
+        console.log(res.data);
+        toast(res.data.message);
+        setShowGlass(true);
+      } else if(res.data.error){
+        toast(res.data.error);
+      }
+    } catch (error) {
+      toast("error while sending");
     }
   }
-    console.log(rating)
-    
+
   if (spaceNotFound) {
     return (
       <div className="bg-neutral-900 h-screen flex items-center justify-center text-white">
@@ -65,13 +85,35 @@ export function UserSpace() {
   }
 
   return (
+
+    <div> 
+
+   {/* Thankyou Image */}
+
+   {showGlass ? (
+    <div>
+     <ImageEffect 
+        text1="Thank you!"
+        text2="Thank you so much for your shoutout!"
+        text3="It means a tons of us!"
+        onClick={()=>{setShowGlass(false),
+          setShowPopup(false)}}
+        />
+    </div>
+
+   ):(
     <div className="bg-neutral-900 h-screen relative">
+
+      {/* Input from user page */}
+
       {showPopup && (
         <div className="absolute inset-0 flex items-center justify-center text-black">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-            <div className="flex justify-end cursor-pointer" 
-            onClick={()=>setShowPopup(false)}>
-              close
+          <div className="bg-white p-8 rounded-lg shadow-lg w-4/12">
+            <div
+              className="flex justify-end cursor-pointer"
+              onClick={() => setShowPopup(false)}
+            >
+              <img src="close.svg" alt="close" />
             </div>
             <div className="text-center">
               <div>
@@ -82,23 +124,27 @@ export function UserSpace() {
                   className="mx-auto mb-4"
                 />
               </div>
-             
-              <div className="font-bold text-xl mb-4">
-                Write text testimonial to
-              </div>
 
-              <div className="mt-4">
-                <RatingReview rating={rating} setRating={setRating} />
+              <div className="font-bold text-xl mb-4">
+                Write text testimonial to {title}
               </div>
 
               <div className="text-left mb-4">
                 <div className="font-semibold mb-2">Questions</div>
-                <div>{"1. What did you like about the service?"}</div>
+                {questions.map((each, index) => (
+                  <div key={index}>
+                    {index + 1}. {each}{" "}
+                  </div>
+                ))}{" "}
+              </div>
+
+              <div className="mt-4 text-left cursor-pointer">
+                <RatingReview rating={rating} setRating={setRating} />
               </div>
 
               <div className="mb-4">
                 <textarea
-                  className="w-full p-2 border rounded"
+                  className="w-full h-24 p-2 border rounded-lg"
                   placeholder="Write review here"
                   onChange={(e) => {
                     setReview(e.target.value);
@@ -109,11 +155,10 @@ export function UserSpace() {
               <div className="mb-4">
                 <input
                   type="text"
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded-lg"
                   placeholder="Your Name"
-                  required
                   onChange={(e) => {
-                    setEmail(e.target.value);
+                    setName(e.target.value);
                   }}
                 />
               </div>
@@ -121,24 +166,28 @@ export function UserSpace() {
               <div className="mb-4">
                 <input
                   type="text"
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded-lg"
                   placeholder="Your Email"
-                  required
                   onChange={(e) => {
-                    setName(e.target.value);
+                    setEmail(e.target.value);
                   }}
                 />
               </div>
 
               <div className="mt-6">
                 <button
-                  className="px-6 py-2 rounded-md bg-blue-600 font-medium text-white"
-                  onClick={request} >Send</button>
+                  className="px-6 py-2 rounded-lg bg-blue-600 font-medium text-white"
+                  onClick={sendReview}
+                >
+                  Send
+                </button>
               </div>
             </div>
           </div>
         </div>
       )}
+      
+      {/* Main page */}
 
       <div className=" pt-12 pl-12">
         <img src="logo.svg" alt="" width={200} />
@@ -149,21 +198,34 @@ export function UserSpace() {
           <img src="logo.svg" alt="" width={150} />
         </div>
 
-        <div className="mt-12 font-bold text-4xl">Heading</div>
+        <div className="mt-12 font-bold text-4xl">{title}</div>
 
-        <div className="mt-12 text-lg">Description</div>
+        <div className="mt-12 text-lg">{description}</div>
 
         <div className="mt-12">
           QUESTION
-          <div className="mt-4">1.Questions</div>
+          <div className="mt-4">
+            {questions.map((each, index) => (
+              <div key={index}>
+                {index + 1}. {each}{" "}
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="mt-12">
-          <button 
-          className="px-6 py-2 rounded-md bg-blue-600 font-medium text-white cursor-pointer"
-          onClick={() => setShowPopup(!showPopup)}>write</button>
+          <button
+            className="px-6 py-2 rounded-lg bg-blue-600 font-medium text-white cursor-pointer"
+            onClick={() => setShowPopup(!showPopup)}
+          >
+            write
+          </button>
         </div>
       </div>
     </div>
+   )}
+
+    </div>
+
   );
 }

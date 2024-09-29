@@ -23,7 +23,7 @@ export function Dashboard() {
         }
       })
       
-      if(res.data.spacenames){
+      if(res.data.spacenames && res.data.spacenames.length != 0){
         console.log(res.data)
         setSpace(res.data.spacenames)
         setShowCreateSpace(false)

@@ -22,7 +22,6 @@ export function SignUp() {
           email,
           password,
         },
-        { withCredentials: true }
       );
 
       if (res.data) {

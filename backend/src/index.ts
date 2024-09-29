@@ -1,13 +1,15 @@
-require("dotenv").config();
-const SECRET_KEY = process.env.SECRET_KEY as string | undefined;
 import { authMiddleware } from "./auth";
 import express from "express";
-import cors from "cors";
-import jsonwebtoken from "jsonwebtoken";
-const jwt = jsonwebtoken;
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import path from "path";
+import cors from "cors";
+import jsonwebtoken from "jsonwebtoken";
+
+require("dotenv").config();
+
+const SECRET_KEY = process.env.SECRET_KEY as string | undefined;
+const jwt = jsonwebtoken;
 const prisma = new PrismaClient();
 
 const app = express();
@@ -170,7 +172,7 @@ app.get("/getspace", authMiddleware, async (req, res) => {
   }
 });
 
-app.get("/publicspacename/:space", async (req, res) => {
+app.get("/userspace/:space", async (req, res) => {
   const spacename = req.params.space;
 
   if (!spacename) {
@@ -185,7 +187,11 @@ app.get("/publicspacename/:space", async (req, res) => {
     const userWithSpacename = await prisma.userspace.findFirst({
       where: {
         spacename: spacename,
-      },
+      },select:{
+        title:true,
+        description:true,
+        questions:true
+      }
     });
 
     if (!userWithSpacename) {
@@ -242,7 +248,7 @@ app.post("/createspace", authMiddleware, async (req, res) => {
   }
 });
 
-app.post("/review", async (req, res) => {
+app.post("/createreview", async (req, res) => {
   const { review, stars, name, email, spacename } = req.body;
 
   if (!review || !stars || !name || !email || !spacename) {
