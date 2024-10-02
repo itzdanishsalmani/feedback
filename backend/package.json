@@ -6,6 +6,11 @@
   "prisma": {
     "seed": "ts-node --project prisma/tsconfig.prisma.json prisma/seed.ts"
   },
+  "scripts": {
+  "build": "tsc && npx prisma generate",
+  "start": "node dist/index.js",    
+  "postinstall": "prisma generate"
+},
   "author": "Danish",
   "license": "ISC",
   "dependencies": {
