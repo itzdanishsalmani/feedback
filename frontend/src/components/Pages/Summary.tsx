@@ -182,7 +182,7 @@ export function Summary() {
                         copyToClipboard(`
 <div id="testimonial-widget-container"></div>
 <div id="main-[${reviewId}][${spacename}][${theme}]"></div>
-<script src="http://localhost:3000/js/widget.js"></script>`)
+<script src="https://testimonialss.vercel.app/js/widget.js"></script>`)
                       }
                     >
                       {copied ? (
@@ -199,7 +199,7 @@ export function Summary() {
                       {`
 <div id="testimonial-widget-container"></div>
 <div id="main-[${reviewId}][${spacename}][${theme}]"></div>
-<script src="http://localhost:3000/js/widget.js"></script>
+<script src="https://testimonialss.vercel.app/js/widget.js"></script>
     `}
                     </div>
                   </pre>
@@ -242,7 +242,7 @@ export function Summary() {
         <div className="mt-4">
           Space public URL:{" "}
           <a
-            href={`http://localhost:5173/${space}`}
+            href={`https://testimonialss.vercel.app/${space}`}
             className="underline"
             target="_blank"
             rel="noopener noreferrer"
