@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 export const SixCardSection = () =>{
     return (
         <div className="max-w-[1200px] mx-auto">
@@ -75,6 +77,7 @@ interface CardText {
 }
 
 const CardWrapperLeftText = ({text1,text2,text3,text4,text4_css,image}:CardText) => {
+    const navigate = useNavigate()
     return (
         <div className="mt-24 md:px-8 grid md:grid-cols-2 items-center">
             <div className="md:mr-8 mb-4">
@@ -82,7 +85,7 @@ const CardWrapperLeftText = ({text1,text2,text3,text4,text4_css,image}:CardText)
                 <div className="mt-4 text-white text-4xl font-bold">{text2}</div>
                 <div className="mt-4 text-lg">{text3}</div>
                 <div className={text4_css}>{text4}</div>
-                <div><button className="mt-4 p-2 bg-blue-600 rounded-lg">Try it for Free</button></div>
+                <div><button className="mt-4 p-2 bg-blue-600 rounded-lg" onClick={()=>navigate("/signup")}>Try it for Free</button></div>
             </div>
 
             <div className="md:ml-8">
@@ -97,6 +100,7 @@ const CardWrapperLeftText = ({text1,text2,text3,text4,text4_css,image}:CardText)
 
 
 const CardWrapperRightText = ({text1,text2,text3,text4,text4_css,image}:CardText) => {
+    const navigate = useNavigate()
     return (
         <div className="mt-24 md:px-8 grid md:grid-cols-2 items-center">
             <div className="md:mr-8 order-last md:order-first">
@@ -110,7 +114,7 @@ const CardWrapperRightText = ({text1,text2,text3,text4,text4_css,image}:CardText
                 <div className="mt-4 text-white text-4xl font-bold">{text2}</div>
                 <div className="mt-4 text-lg">{text3}</div>
                 <div className={text4_css}>{text4}</div>
-                <div><button className="mt-4 p-2 bg-blue-600 rounded-lg">Try if for Free</button></div>
+                <div><button className="mt-4 p-2 bg-blue-600 rounded-lg"onClick={()=>navigate("/signup")}>Try if for Free</button></div>
             </div>
         </div>
     )

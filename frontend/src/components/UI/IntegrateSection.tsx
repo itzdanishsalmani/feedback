@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom"
+
 export const IntegrateSection = () => {
+    const navigate = useNavigate()
     return (
         <div className="max-w-[1200px] mx-auto">
             <div className="mt-56 flex justify-center">
@@ -53,10 +56,9 @@ export const IntegrateSection = () => {
             </div>
 
             <div className="mt-6 flex space-x-12 justify-center ">
-                <div><button className="border">Get started with FREE Credits</button></div>
-                <div><button className="border">talk to us</button></div>
+                <div><button className="bg-blue-700 p-2 w-full cursor-pointer rounded-lg" onClick={()=>(navigate("/signup"))}>Get started with FREE Credits</button></div>
+                <div><button className="border p-2 w-full cursor-pointer rounded-lg"> <a href="https://x.com/itzzdanish" target="_blank" rel="noopener noreferrer" >Talk to us</a> </button></div>
             </div>
-
             <div className="mt-6 underline text-center">
             See our pricing →
             </div>

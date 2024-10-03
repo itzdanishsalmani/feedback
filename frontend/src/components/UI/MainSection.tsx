@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 export const MainSection = () => {
+  const navigate = useNavigate()
   return (
     <div className="max-w-[1200px] mx-auto">
       <div className=" mt-8 md:mt-24 flex justify-center">
@@ -16,10 +19,10 @@ export const MainSection = () => {
 
       <div className="mt-6 flex md:flex-row justify-center space-x-6">
         <div>
-          <button className="border p-2 w-full">Try Free Now</button>
+          <button className="bg-blue-700  p-2 w-full cursor-pointer rounded-lg" onClick={()=>(navigate("/signup"))}>Try Free Now</button>
         </div>
         <div>
-          <button className="border p-2 w-full">Talk to us</button>
+        <div><button className="border p-2 w-full cursor-pointer rounded-lg"> <a href="https://x.com/itzzdanish" target="_blank" rel="noopener noreferrer" >Talk to us</a> </button></div>
         </div>
       </div>
 

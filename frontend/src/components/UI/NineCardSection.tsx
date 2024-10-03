@@ -21,10 +21,6 @@ export const NineCardSection = () => {
                 <div><img src="img9.png" alt="" width={350} className="rounded-lg" /></div>
             </div>
 
-            <div className="mt-6 md:mt-12">
-                <img src="logo.png" alt="" width={50} /> Testimonial
-            </div>
-
             <div className="mt-12 h-0.1 w-full bg-slate-400 border">
                 <hr />
             </div>

@@ -12,7 +12,7 @@ export const NavBar = () => {
           <img src="/logo.png" alt="" width={50} />
         </div>
 
-        <div className="hidden md:flex flex-row space-x-8 ">
+        <div className="hidden md:flex flex-row space-x-8 cursor-pointer">
           <div>Customers</div>
           <div>Features</div>
           <div>Integrations</div>
