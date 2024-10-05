@@ -5,7 +5,6 @@ import bcrypt from "bcrypt";
 import path from "path";
 import cors from "cors";
 import jsonwebtoken from "jsonwebtoken";
-import { uploadProfileImage } from "./multer";
 require("dotenv").config();
 import multer from "multer";
 const SECRET_KEY = process.env.SECRET_KEY as string | undefined;
