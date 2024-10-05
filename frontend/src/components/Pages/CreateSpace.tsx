@@ -70,8 +70,8 @@ export function CreateSpace() {
       {showGlass ? (
         <ImageEffect
           text1="Thank you!"
-          text2="Thank you so much for your shoutout!"
-          text3="It means a tons of us!"
+          text2="Your Space is created!"
+          text3="Take reviews and use in your website!"
           onClick={() => navigate("/summary")}
         />
       ) : (
