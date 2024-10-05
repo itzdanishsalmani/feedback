@@ -20,9 +20,21 @@ const path_1 = __importDefault(require("path"));
 const cors_1 = __importDefault(require("cors"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 require("dotenv").config();
+const multer_1 = __importDefault(require("multer"));
 const SECRET_KEY = process.env.SECRET_KEY;
 const jwt = jsonwebtoken_1.default;
 const prisma = new client_1.PrismaClient();
+const storage = multer_1.default.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadPath = path_1.default.join(__dirname, '../public/profileImage');
+        console.log(`Upload path: ${uploadPath}`);
+        cb(null, uploadPath); // Set destination folder for uploaded files
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`); // Generate filename
+    },
+});
+const upload = (0, multer_1.default)({ storage }).single('profileImage');
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.static(path_1.default.join(__dirname, '../public')));
@@ -31,7 +43,6 @@ if (!SECRET_KEY) {
     throw new Error("SECRET_KEY is not defined in the environment variables");
 }
 app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    prisma.user.create;
     res.send("server is running");
 }));
 app.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -96,12 +107,12 @@ app.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             });
         }
         // comment password encryption when using seeded data for signin
-        // const isPasswordValid = await bcrypt.compare(password, userExist.password);
-        // if (!isPasswordValid) {
-        //   return res.status(401).json({
-        //     error: "Invalid password",
-        //   });
-        // }
+        const isPasswordValid = yield bcrypt_1.default.compare(password, userExist.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({
+                error: "Invalid password",
+            });
+        }
         if (userExist) {
             const access_token = yield jwt.sign({ id: userExist.id, email: userExist.email }, SECRET_KEY);
             return res
@@ -168,7 +179,8 @@ app.get("/userspace/:space", (req, res) => __awaiter(void 0, void 0, void 0, fun
             }, select: {
                 title: true,
                 description: true,
-                questions: true
+                questions: true,
+                profileImage: true
             }
         });
         if (!userWithSpacename) {
@@ -188,36 +200,59 @@ app.get("/userspace/:space", (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 }));
 app.post("/createspace", auth_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("User from request body:", req.body.user); // Add this line in createspace route
     const userId = req.body.user.id;
-    const { spacename, title, description, questions } = req.body;
-    if (!spacename || !title || !description || !questions) {
-        return res.status(404).json({
-            error: "Fields are required",
+    // Use multer upload inline inside the route
+    upload(req, res, function (err) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (err) {
+                console.error('File upload error:', err);
+                return res.status(500).json({ error: "File upload failed" });
+            }
+            const { spacename, title, description, questions } = req.body;
+            // Check if the file is uploaded
+            if (!req.file) {
+                console.error('File not uploaded:', req.file);
+                return res.status(400).json({ error: "Profile image upload failed" });
+            }
+            console.log(req.file); // Log uploaded file
+            console.log(req.body); // Log request body data
+            const profileImageUrl = `/profileImage/${req.file.filename}`; // URL for uploaded image
+            // Validate required fields
+            if (!spacename || !title || !description || !questions) {
+                return res.status(404).json({
+                    error: "Fields are required",
+                });
+            }
+            console.log(userId, spacename, title, description, questions);
+            try {
+                // Create space in the database
+                const parsedQuestions = JSON.parse(questions);
+                const space = yield prisma.userspace.create({
+                    data: {
+                        spacename: spacename.toLowerCase(),
+                        title: title,
+                        description: description,
+                        questions: parsedQuestions,
+                        userId: userId,
+                        profileImage: profileImageUrl,
+                    },
+                });
+                if (space) {
+                    return res.status(200).json({
+                        message: "Space created successfully!",
+                        spacename,
+                    });
+                }
+            }
+            catch (error) {
+                console.error('Error creating space:', error);
+                return res.status(500).json({
+                    error: "Internal server error",
+                });
+            }
         });
-    }
-    console.log(userId, spacename, title, description, questions);
-    try {
-        const space = yield prisma.userspace.create({
-            data: {
-                spacename: spacename.toLowerCase(),
-                title: title,
-                description: description,
-                questions: questions,
-                userId: userId,
-            },
-        });
-        if (space) {
-            return res.status(200).json({
-                message: "Space created successfully!",
-                spacename,
-            });
-        }
-    }
-    catch (error) {
-        return res.status(500).json({
-            error: "Internal server error",
-        });
-    }
+    });
 }));
 app.post("/createreview", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { review, stars, name, email, spacename } = req.body;
@@ -319,6 +354,7 @@ app.get("/getreview", auth_1.authMiddleware, (req, res) => __awaiter(void 0, voi
             },
             select: {
                 spacename: true,
+                profileImage: true
             },
         });
         if (!getReview || !space) {

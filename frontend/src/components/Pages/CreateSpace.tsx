@@ -10,6 +10,7 @@ export function CreateSpace() {
   const [title, setTitle] = useState<string>("");
   const [customMessage, setCustomMessage] = useState<string>("");
   const [allQuestions, setAllQuestions] = useState<string[]>([""]);
+  const [profileImage, setProfileImage] = useState<File | null>(null);
   const [showGlass, setShowGlass] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -30,42 +31,48 @@ export function CreateSpace() {
     setAllQuestions(updatedQuestions);
   }
 
-  async function handle() {
+  const handle = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      const res = await axios.post(
-        "/createspace",
-        {
-          spacename: spaceName,
-          title: title,
-          description: customMessage,
-          questions: allQuestions, // Sending as an array of objects
+      const formData = new FormData();
+      formData.append("spacename", spaceName);
+      formData.append("title", title);
+      formData.append("description", customMessage);
+      formData.append("questions", JSON.stringify(allQuestions));
+
+      if (profileImage) {
+        formData.append("profileImage", profileImage); 
+      }
+
+      const res = await axios.post("/createspace", formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          "Content-Type": "multipart/form-data",
         },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        }
-      );
+      });
+      console.log(res.data);
+
       if (res.data) {
         toast(res.data.message);
         setShowGlass(true);
       } else {
         toast(res.data.error);
       }
-    } catch (error) {
-      toast("Error while creating");
-    }
+    } catch (error: any) {
+  console.error("Error:", error.response ? error.response.data : error.message);
+  toast(error.response ? error.response.data.message : error.message);
+}
   }
 
   return (
     // display thanks gif, when clicked on createspace
     <div>
       {showGlass ? (
-        <ImageEffect 
-        text1="Thank you!"
-        text2="Thank you so much for your shoutout!"
-        text3="It means a tons of us!"
-        onClick={()=>navigate('/summary')}
+        <ImageEffect
+          text1="Thank you!"
+          text2="Thank you so much for your shoutout!"
+          text3="It means a tons of us!"
+          onClick={() => navigate("/summary")}
         />
       ) : (
         //main page renders
@@ -132,6 +139,13 @@ export function CreateSpace() {
                 <div>Space logo</div>
                 <div>
                   <button className="border">Upload</button>
+                  <input
+                    type="file"
+                    accept="image/*" // Optional: restrict file types
+                    onChange={(e) =>
+                      setProfileImage(e.target.files ? e.target.files[0] : null)
+                    } // Use single file
+                  />
                 </div>
               </div>
 

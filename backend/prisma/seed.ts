@@ -32,6 +32,7 @@ async function main() {
       title: 'John\'s Awesome Space',
       description: 'A description of John\'s space.',
       questions: ['What is your favorite color?', 'How did you hear about us?'],
+      profileImage:"",
       userId: user1.id,
     },
   });
@@ -42,6 +43,7 @@ async function main() {
       title: 'Jane\'s Creative Space',
       description: 'A description of Jane\'s space.',
       questions: ['What motivates you?', 'What projects are you working on?'],
+      profileImage:"",
       userId: user2.id,
     },
   });

@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { RatingReview } from "../Utils/RatingReview";
 import { toast } from "react-toastify";
 import { ImageEffect } from "../UI/ImageEffect";
+import { NavBarOther } from "../UI/NavBarOther";
 
 export function UserSpace() {
   const [rating, setRating] = useState<number>(0);
@@ -17,6 +18,7 @@ export function UserSpace() {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState("");
   const [questions, setQuestions] = useState<string[]>([]);
+  const [profileImage, setProfileImage] = useState<string>("");
 
   const [showGlass, setShowGlass] = useState<boolean>(false);
   
@@ -29,6 +31,10 @@ export function UserSpace() {
           setTitle(res.data.userWithSpacename.title);
           setDescription(res.data.userWithSpacename.description);
           setQuestions(res.data.userWithSpacename.questions);
+
+          const profileImage = `http://localhost:3000/${res.data.userWithSpacename.profileImage}`;
+
+          setProfileImage(profileImage)
         }
         if (res.data.error) {
           setSpaceNotFound(true);
@@ -189,13 +195,13 @@ export function UserSpace() {
       
       {/* Main page */}
 
-      <div className=" pt-12 pl-12">
-        <img src="logo.png" alt="" width={200} />
+      <div>
+<NavBarOther/>
       </div>
 
       <div className="text-center">
         <div className="flex justify-center">
-          <img src="logo.png" alt="" width={150} />
+          <img src={profileImage} alt="" width={150} />
         </div>
 
         <div className="mt-12 font-bold text-4xl">{title}</div>

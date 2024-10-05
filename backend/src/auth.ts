@@ -42,7 +42,7 @@ export async function authMiddleware(
       error: "Unauthorized",
     });
   }
-
+  
   req.body.user = decodedValue;
 
   next();

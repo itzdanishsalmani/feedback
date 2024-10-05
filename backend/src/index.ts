@@ -5,13 +5,25 @@ import bcrypt from "bcrypt";
 import path from "path";
 import cors from "cors";
 import jsonwebtoken from "jsonwebtoken";
-
+import { uploadProfileImage } from "./multer";
 require("dotenv").config();
-
+import multer from "multer";
 const SECRET_KEY = process.env.SECRET_KEY as string | undefined;
 const jwt = jsonwebtoken;
 const prisma = new PrismaClient();
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadPath = path.join(__dirname, '../public/profileImage');
+    console.log(`Upload path: ${uploadPath}`);
+    cb(null, uploadPath); // Set destination folder for uploaded files
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`); // Generate filename
+  },
+});
+
+const upload = multer({ storage }).single('profileImage'); 
 const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
@@ -22,7 +34,6 @@ if (!SECRET_KEY) {
 }
 
 app.get("/", async (req, res) => {
-  prisma.user.create;
   res.send("server is running");
 });
 
@@ -105,13 +116,13 @@ app.post("/signin", async (req, res) => {
 
     // comment password encryption when using seeded data for signin
 
-    // const isPasswordValid = await bcrypt.compare(password, userExist.password);
+    const isPasswordValid = await bcrypt.compare(password, userExist.password);
 
-    // if (!isPasswordValid) {
-    //   return res.status(401).json({
-    //     error: "Invalid password",
-    //   });
-    // }
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        error: "Invalid password",
+      });
+    }
 
     if (userExist) {
       const access_token = await jwt.sign(
@@ -190,7 +201,8 @@ app.get("/userspace/:space", async (req, res) => {
       },select:{
         title:true,
         description:true,
-        questions:true
+        questions:true,
+        profileImage:true
       }
     });
 
@@ -212,10 +224,30 @@ app.get("/userspace/:space", async (req, res) => {
 });
 
 app.post("/createspace", authMiddleware, async (req, res) => {
+  
+  console.log("User from request body:", req.body.user); // Add this line in createspace route
   const userId = req.body.user.id;
+ // Use multer upload inline inside the route
+ upload(req, res, async function (err) {
+  if (err) {
+    console.error('File upload error:', err);
+    return res.status(500).json({ error: "File upload failed" });
+  }
 
   const { spacename, title, description, questions } = req.body;
 
+  // Check if the file is uploaded
+  if (!req.file) {
+    console.error('File not uploaded:', req.file);
+    return res.status(400).json({ error: "Profile image upload failed" });
+  }
+
+  console.log(req.file); // Log uploaded file
+  console.log(req.body); // Log request body data
+
+  const profileImageUrl = `/profileImage/${req.file.filename}`; // URL for uploaded image
+
+  // Validate required fields
   if (!spacename || !title || !description || !questions) {
     return res.status(404).json({
       error: "Fields are required",
@@ -225,13 +257,17 @@ app.post("/createspace", authMiddleware, async (req, res) => {
   console.log(userId, spacename, title, description, questions);
 
   try {
+    // Create space in the database
+    const parsedQuestions = JSON.parse(questions);
+
     const space = await prisma.userspace.create({
       data: {
         spacename: spacename.toLowerCase(),
         title: title,
         description: description,
-        questions: questions,
+        questions: parsedQuestions,
         userId: userId,
+        profileImage: profileImageUrl,
       },
     });
 
@@ -242,10 +278,12 @@ app.post("/createspace", authMiddleware, async (req, res) => {
       });
     }
   } catch (error) {
+    console.error('Error creating space:', error);
     return res.status(500).json({
       error: "Internal server error",
     });
   }
+});
 });
 
 app.post("/createreview", async (req, res) => {
@@ -362,6 +400,7 @@ app.get("/getreview", authMiddleware, async (req, res) => {
       },
       select: {
         spacename: true,
+        profileImage:true
       },
     });
 

@@ -22,6 +22,7 @@ model Userspace {
   title       String
   description String
   questions   String[]
+  profileImage String
   userId      Int
   user        User     @relation(fields: [userId], references: [id])
 }

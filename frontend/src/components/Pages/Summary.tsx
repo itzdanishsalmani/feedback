@@ -102,6 +102,8 @@ export function Summary() {
   const [defaultTheme, setTheme] = useState<string>("light");
   const [copied, setcopied] = useState<boolean>(false);
 
+  const [profileImage,setProfileImage] = useState<any>(null)
+
   //variable to store the spacename and reviewId to create a embedded code
 
   const spacename = space.toLocaleLowerCase();
@@ -125,6 +127,7 @@ export function Summary() {
       ) {
         setReviews(res.data.getReview);
         setSpace(res.data.space.spacename);
+        setProfileImage(`https://testimonial-backend-ukzx.onrender.com/${res.data.space.profileImage}`)
       } else {
         console.log(res.data);
         toast(res.data.error + "No reviews found");
@@ -150,7 +153,7 @@ export function Summary() {
         <NavBarOther />
 
         <div className="mt-4">
-          <img src="logo.png" alt="Logo" width={50} />
+          <img src={profileImage} alt="profile Image" width={100} />
         </div>
 
         {/* wall of love overlap Cards  */}
@@ -182,7 +185,7 @@ export function Summary() {
                         copyToClipboard(`
 <div id="testimonial-widget-container"></div>
 <div id="main-[${reviewId}][${spacename}][${theme}]"></div>
-<script src="https://testimonialss.vercel.app/js/widget.js"></script>`)
+<script src="https://testimonial-backend-ukzx.onrender.com/js/widget.js"></script>`)
                       }
                     >
                       {copied ? (
@@ -199,7 +202,7 @@ export function Summary() {
                       {`
 <div id="testimonial-widget-container"></div>
 <div id="main-[${reviewId}][${spacename}][${theme}]"></div>
-<script src="https://testimonialss.vercel.app/js/widget.js"></script>
+<script src="https://testimonial-backend-ukzx.onrender.comjs/widget.js"></script>
     `}
                     </div>
                   </pre>
@@ -247,7 +250,7 @@ export function Summary() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            http://localhost:5173/{space}
+            https://testimonialss.vercel.app/{space}
           </a>
         </div>
 
