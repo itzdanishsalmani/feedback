@@ -113,6 +113,7 @@ app.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 error: "Invalid password",
             });
         }
+        // comment till here if using seeded data 
         if (userExist) {
             const access_token = yield jwt.sign({ id: userExist.id, email: userExist.email }, SECRET_KEY);
             return res

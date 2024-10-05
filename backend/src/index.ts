@@ -107,7 +107,6 @@ app.post("/signin", async (req, res) => {
       },
     });
   
-
     if (!userExist) {
       return res.status(404).json({
         error: "User not found",
@@ -123,6 +122,8 @@ app.post("/signin", async (req, res) => {
         error: "Invalid password",
       });
     }
+
+    // comment till here if using seeded data 
 
     if (userExist) {
       const access_token = await jwt.sign(
