@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-    baseURL:"https://testimonial-backend-l8yg.onrender.com/"
+    baseURL:"https://testimonial-backend-8ylm.onrender.com/"
     // baseURL:"http://localhost:8080"
 }) 
 
