@@ -18,6 +18,7 @@ const client_1 = require("@prisma/client");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const path_1 = __importDefault(require("path"));
 const cors_1 = __importDefault(require("cors"));
+const fs_1 = __importDefault(require("fs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 require("dotenv").config();
 const multer_1 = __importDefault(require("multer"));
@@ -27,11 +28,18 @@ const prisma = new client_1.PrismaClient();
 const storage = multer_1.default.diskStorage({
     destination: (req, file, cb) => {
         const uploadPath = path_1.default.join(__dirname, '../public/profileImage');
-        console.log(`Upload path: ${uploadPath}`);
-        cb(null, uploadPath); // Set destination folder for uploaded files
+        // Check if the directory exists, if not, create it
+        fs_1.default.mkdir(uploadPath, { recursive: true }, (err) => {
+            if (err) {
+                console.error("Directory creation failed:", err);
+                return cb(err, uploadPath);
+            }
+            console.log(`Upload path: ${uploadPath}`);
+            cb(null, uploadPath);
+        });
     },
     filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`); // Generate filename
+        cb(null, `${Date.now()}-${file.originalname}`);
     },
 });
 const upload = (0, multer_1.default)({ storage }).single('profileImage');
