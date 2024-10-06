@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import path from "path";
 import cors from "cors";
+import fs from "fs"
 import jsonwebtoken from "jsonwebtoken";
 require("dotenv").config();
 import multer from "multer";
@@ -14,11 +15,19 @@ const prisma = new PrismaClient();
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadPath = path.join(__dirname, '../public/profileImage');
-    console.log(`Upload path: ${uploadPath}`);
-    cb(null, uploadPath); // Set destination folder for uploaded files
+
+    // Check if the directory exists, if not, create it
+    fs.mkdir(uploadPath, { recursive: true }, (err:any) => {
+      if (err) {
+        console.error("Directory creation failed:", err);
+        return cb(err, uploadPath);
+      }
+      console.log(`Upload path: ${uploadPath}`);
+      cb(null, uploadPath);
+    });
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`); // Generate filename
+    cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
 
