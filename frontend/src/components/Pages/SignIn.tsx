@@ -20,13 +20,13 @@ export function SignIn() {
         password,
       });
       
-      if (res.data) {        
+      if (res.data.message) {        
         localStorage.setItem("access_token",res.data.access_token)
         console.log(res.data)
         toast(res.data.message);
         navigate('/dashboard')
 
-      } else {
+      } else{
         toast(res.data.error);
       }
     }

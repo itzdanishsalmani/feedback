@@ -32,7 +32,7 @@ export function UserSpace() {
           setDescription(res.data.userWithSpacename.description);
           setQuestions(res.data.userWithSpacename.questions);
 
-          const profileImage = `http://localhost:3000/${res.data.userWithSpacename.profileImage}`;
+          const profileImage = `https://testimonial-backend-l8yg.onrender.com/${res.data.userWithSpacename.profileImage}`;
 
           setProfileImage(profileImage)
         }

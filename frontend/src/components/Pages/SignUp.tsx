@@ -24,7 +24,7 @@ export function SignUp() {
         },
       );
 
-      if (res.data) {
+      if (res.data.message) {
         localStorage.setItem("access_token", res.data.access_token);
         toast(res.data.message);
         console.log(res.data);

@@ -40,7 +40,7 @@ app.post("/signup", async (req, res) => {
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
-    return res.status(404).json({
+    return res.json({
       error: "Fields cannot be empty",
     });
   }
@@ -57,7 +57,7 @@ app.post("/signup", async (req, res) => {
     });
 
     if (userExist) {
-      return res.status(401).json({
+      return res.json({
         error: "User Already Exist",
       });
     }
@@ -75,14 +75,14 @@ app.post("/signup", async (req, res) => {
       SECRET_KEY
     );
 
-    return res.status(200)
-    .json({
+    return res.json({
       message: "User Created Successfully!",
       access_token,
       user,
     });
+
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       error: "Internal server error",
     });
   }
@@ -92,7 +92,7 @@ app.post("/signin", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(404).json({
+    return res.json({
       error: "Fields cannot be empty",
     });
   }
@@ -103,14 +103,13 @@ app.post("/signin", async (req, res) => {
     const userExist = await prisma.user.findFirst({
       where: {
         email: email,
-        password:password
       },
     });
   
     if (!userExist) {
-      return res.status(404).json({
+      return res.json({
         error: "User not found",
-      });
+      })
     }
 
     // comment password encryption when using seeded data for signin
@@ -118,11 +117,10 @@ app.post("/signin", async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, userExist.password);
 
     if (!isPasswordValid) {
-      return res.status(401).json({
+      return res.json({
         error: "Invalid password",
-      });
+      })
     }
-
     // comment till here if using seeded data 
 
     if (userExist) {
@@ -131,15 +129,14 @@ app.post("/signin", async (req, res) => {
         SECRET_KEY
       );
 
-      return res
-        .status(200)
-        .json({
-          message: "Signin successfully!",
-          access_token,
-        });
+      return res.json({
+        message: "Signin successfully!",
+        access_token,
+      })
     }
+
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       error: "Internal server error",
     });
   }
@@ -165,7 +162,7 @@ app.get("/getspace", authMiddleware, async (req, res) => {
     });
 
     if (!userWithSpaces) {
-      return res.status(404).json({
+      return res.json({
         error: "Spacename not found",
       });
     }
@@ -173,12 +170,12 @@ app.get("/getspace", authMiddleware, async (req, res) => {
     // Extract the spacenames from the userspace array
     const spacenames = userWithSpaces.userspace.map((space) => space.spacename);
 
-    return res.status(200).json({
+    return res.json({
       message: "Spacename is retrieved",
       spacenames,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.json({
       error: "Internal server error",
     });
   }
@@ -188,7 +185,7 @@ app.get("/userspace/:space", async (req, res) => {
   const spacename = req.params.space;
 
   if (!spacename) {
-    return res.status(404).json({
+    return res.json({
       error: "Spacename is required",
     });
   }
@@ -208,17 +205,17 @@ app.get("/userspace/:space", async (req, res) => {
     });
 
     if (!userWithSpacename) {
-      return res.status(404).json({
+      return res.json({
         error: "Spacename doesn't exist",
       });
     }
 
-    return res.status(200).json({
+    return res.json({
       userWithSpacename,
       message: "Spacename is retrieved",
     });
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       error: "Internal server error",
     });
   }
@@ -232,7 +229,7 @@ app.post("/createspace", authMiddleware, async (req, res) => {
  upload(req, res, async function (err) {
   if (err) {
     console.error('File upload error:', err);
-    return res.status(500).json({ error: "File upload failed" });
+    return res.json({ error: "File upload failed" });
   }
 
   const { spacename, title, description, questions } = req.body;
@@ -240,7 +237,7 @@ app.post("/createspace", authMiddleware, async (req, res) => {
   // Check if the file is uploaded
   if (!req.file) {
     console.error('File not uploaded:', req.file);
-    return res.status(400).json({ error: "Profile image upload failed" });
+    return res.json({ error: "Profile image upload failed" });
   }
 
   console.log(req.file); // Log uploaded file
@@ -250,7 +247,7 @@ app.post("/createspace", authMiddleware, async (req, res) => {
 
   // Validate required fields
   if (!spacename || !title || !description || !questions) {
-    return res.status(404).json({
+    return res.json({
       error: "Fields are required",
     });
   }
@@ -260,6 +257,19 @@ app.post("/createspace", authMiddleware, async (req, res) => {
   try {
     // Create space in the database
     const parsedQuestions = JSON.parse(questions);
+
+    const spaceExist = await prisma.userspace.findFirst({
+      where:{
+        spacename:spacename
+      }
+    })
+
+    if(spaceExist){
+      return res
+      .json({
+        error:"Spacename already exist"
+      })
+    }
 
     const space = await prisma.userspace.create({
       data: {
@@ -273,14 +283,13 @@ app.post("/createspace", authMiddleware, async (req, res) => {
     });
 
     if (space) {
-      return res.status(200).json({
+      return res.json({
         message: "Space created successfully!",
         spacename,
       });
     }
   } catch (error) {
-    console.error('Error creating space:', error);
-    return res.status(500).json({
+    return res.json({
       error: "Internal server error",
     });
   }
@@ -291,7 +300,8 @@ app.post("/createreview", async (req, res) => {
   const { review, stars, name, email, spacename } = req.body;
 
   if (!review || !stars || !name || !email || !spacename) {
-    return res.status(404).json({
+
+    return res.json({
       error: "Fields are required",
     });
   }
@@ -309,7 +319,7 @@ app.post("/createreview", async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({
+      return res.json({
         error: "User not found",
       });
     }
@@ -326,11 +336,11 @@ app.post("/createreview", async (req, res) => {
       },
     });
 
-    return res.status(200).json({
+    return res.json({
       message: "Testimonial created successfully",
     });
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       error: "Internal server error",
     });
   }
@@ -366,13 +376,13 @@ app.get("/testimonial/:spacename", async (req, res) => {
       }
     }) 
 
-    return res.status(200).json({
+    return res.json({
       message: "Reviews fetched successfully",
       getReview
     });
 
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       error: "Internal server error",
     });
   }
@@ -406,24 +416,24 @@ app.get("/getreview", authMiddleware, async (req, res) => {
     });
 
     if (!getReview || !space) {
-      return res.status(404).json({
+      return res.json({
         error: "reviews not found",
       });
     }
 
-    return res.status(200).json({
+    return res.json({
       message: "Reviews fetched successfully",
       getReview,
       space,
     });
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       error: "Internal server error",
     });
   }
 });
 
-const port = 3000;
+const port = 8080;
 app.listen(port, () => {
   console.log(`server is running at port ${port}`);
 });

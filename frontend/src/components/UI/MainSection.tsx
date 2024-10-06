@@ -1,7 +1,20 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import axios from "../BaseURL/axios";
 
 export const MainSection = () => {
+
   const navigate = useNavigate()
+
+  useEffect(()=>{
+    handle()
+  },[])
+
+  async function handle() {
+    const res = await axios.get("https://testimonial-backend-l8yg.onrender.com/")
+    console.log(res)
+  }
+
   return (
     <div className="max-w-[1200px] mx-auto">
       <div className=" mt-8 md:mt-24 flex justify-center">

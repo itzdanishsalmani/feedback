@@ -52,7 +52,7 @@ export function CreateSpace() {
       });
       console.log(res.data);
 
-      if (res.data) {
+      if (res.data.message) {
         toast(res.data.message);
         setShowGlass(true);
       } else {

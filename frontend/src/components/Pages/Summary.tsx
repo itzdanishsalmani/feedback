@@ -127,7 +127,7 @@ export function Summary() {
       ) {
         setReviews(res.data.getReview);
         setSpace(res.data.space.spacename);
-        setProfileImage(`https://testimonial-backend-ukzx.onrender.com/${res.data.space.profileImage}`)
+        setProfileImage(`https://testimonial-backend-l8yg.onrender.com/${res.data.space.profileImage}`)
       } else {
         console.log(res.data);
         toast(res.data.error + "No reviews found");
@@ -185,7 +185,7 @@ export function Summary() {
                         copyToClipboard(`
 <div id="testimonial-widget-container"></div>
 <div id="main-[${reviewId}][${spacename}][${theme}]"></div>
-<script src="https://testimonial-backend-ukzx.onrender.com/js/widget.js"></script>`)
+<script src="https://testimonial-backend-l8yg.onrender.com/js/widget.js"></script>`)
                       }
                     >
                       {copied ? (
@@ -202,7 +202,7 @@ export function Summary() {
                       {`
 <div id="testimonial-widget-container"></div>
 <div id="main-[${reviewId}][${spacename}][${theme}]"></div>
-<script src="https://testimonial-backend-ukzx.onrender.comjs/widget.js"></script>
+<script src="https://testimonial-backend-l8yg.onrender.com/widget.js"></script>
     `}
                     </div>
                   </pre>
