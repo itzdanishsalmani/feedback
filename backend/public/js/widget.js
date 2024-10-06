@@ -8,7 +8,7 @@
   let reviewIds = idParts[1].split(",").map(Number);
   let spacename = idParts[2];
   let theme = idParts[3];
-  const API_URL = `http://localhost:3000/testimonial/${spacename}`;
+  const API_URL = `https://testimonial-backend-8ylm.onrender.com/testimonial/${spacename}`;
 
   const style = document.createElement("style");
 
