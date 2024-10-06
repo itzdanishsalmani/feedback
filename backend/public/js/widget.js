@@ -3,13 +3,24 @@
   const CONTAINER_ID = `testimonial-widget-container`;
 
   const reviewIdElement = document.querySelector("[id^='main-']");
-  const idParts = reviewIdElement.id.match(/main-\[(.*?)\]\[(\w+)\]\[(\w+)\]/); // Match all parts of the ID
 
+  const idParts = reviewIdElement.id.match(/main-\[(.*?)\]\[(.*?)\]\[(\w+)\]/); // Match all parts of the ID
+
+  if (!idParts || idParts.length < 4) {
+    console.error("Invalid ID format.");
+    return;
+  }
+
+  // Parse the required parts from the ID
   let reviewIds = idParts[1].split(",").map(Number);
-  let spacename = idParts[2];
-  console.log(spacename)
+
+  // Use encodeURIComponent to handle spaces, apostrophes, and special characters
+  let spacename = encodeURIComponent(idParts[2]);
+
   let theme = idParts[3];
-  const API_URL = `https://testimonial-backend-8ylm.onrender.com/testimonial/${spacename}`;
+  
+    // API URL, spacename is now encoded
+    const API_URL = `https://testimonial-backend-8ylm.onrender.com/testimonial/${spacename}`;
 
   const style = document.createElement("style");
 
