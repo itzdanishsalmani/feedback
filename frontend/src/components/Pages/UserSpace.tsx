@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { RatingReview } from "../Utils/RatingReview";
 import { toast } from "react-toastify";
-import { ImageEffect } from "../UI/ImageEffect";
+import { ImageEffect } from "../Utils/ImageEffect";
 import { NavBarOther } from "../UI/NavBarOther";
-import { BlueButton } from "../UI/Button";
+import { BlueButton } from "../Utils/Button";
 
 export function UserSpace() {
   const [rating, setRating] = useState<number>(0);

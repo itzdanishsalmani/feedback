@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { BlueButton } from "../UI/Button";
+import { BlueButton } from "../Utils/Button";
 import axios from "../BaseURL/axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { ImageEffect } from "../UI/ImageEffect";
+import { ImageEffect } from "../Utils/ImageEffect";
 
 export function CreateSpace() {
   const [spaceName, setSpaceName] = useState<string>("");

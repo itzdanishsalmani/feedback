@@ -2,6 +2,8 @@ import axios from "../BaseURL/axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { WhiteButton } from "../Utils/Button";
+import { LabelledInput } from "../Utils/LabelledInput";
 
 export function SignUp() {
   const [username, setUserame] = useState("");
@@ -10,19 +12,16 @@ export function SignUp() {
 
   const navigate = useNavigate();
 
-  async function handle() {
+  async function handleSignup() {
     if (username === "" || email === "" || password === "") {
       toast("Fields cannot be empty");
       return;
     } else {
-      const res = await axios.post(
-        "/signup",
-        {
-          username,
-          email,
-          password,
-        },
-      );
+      const res = await axios.post("/signup", {
+        username,
+        email,
+        password,
+      });
 
       if (res.data.message) {
         localStorage.setItem("access_token", res.data.access_token);
@@ -39,46 +38,45 @@ export function SignUp() {
     <div className="bg-neutral-900">
       <div className="flex justify-center items-center h-screen">
         <div className="w-96 p-4 rounded-lg">
-          <div className="text-center font-bold text-xl">Create an account</div>
-          <div className="mt-4 text-center">
-            Enter your email below to create an account
+          <div className="text-center font-bold text-xl">
+            {" "}
+            Create an account into Testimonialss
           </div>
-          <div className="mt-4">
-            <input
+
+          <div className="mt-2">
+          <LabelledInput
               type="text"
-              placeholder="John doe"
-              className="w-full rounded-lg  border p-2 bg-neutral-900"
-              onChange={(e) => {
-                setUserame(e.target.value);
-              }}
+              placeholder="Username"
+              onChange={(e) => setUserame(e.target.value)}
             />
-            <input
+          </div>
+
+          <div className="mt-2">
+            <LabelledInput
               type="email"
-              placeholder="johndoe@example.com"
-              className="mt-4 w-full rounded-lg  border p-2 bg-neutral-900"
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
+              placeholder="Email"
+              onChange={(e) => setEmail(e.target.value)}
             />
-            <input
+          </div>
+
+          <div className="mt-2">
+            <LabelledInput
               type="password"
               placeholder="password"
-              className="mt-4 w-full rounded-lg  border p-2 bg-neutral-900"
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
+              onChange={(e) => setPassword(e.target.value)}
             />
-            <button
-              className="mt-4 border bg-white text-black font-bold text-lg p-2 rounded-lg w-full cursor-pointer"
-              onClick={handle}
+          </div>
+          <div className="mt-6">
+            <WhiteButton text="Sign up" onClick={handleSignup} />
+          </div>
+          <div className="mt-6 text-center">
+            <span className="text-neutral-400">Already have an account? </span>
+            <span
+              className="cursor-pointer"
+              onClick={() => navigate("/signin")}
             >
-              Sign up
-            </button>
-            <div className="mt-4 text-center">
-              By clicking on Continue, you agree to our{" "}
-              <span className="underline">Terms of Service</span> and{" "}
-              <span className="underline">Privacy policy.</span>
-            </div>
+              Sign in
+            </span>
           </div>
         </div>
       </div>

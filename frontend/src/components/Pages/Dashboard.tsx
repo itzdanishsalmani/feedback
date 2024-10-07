@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "../BaseURL/axios";
 import { toast } from "react-toastify";
-import { BlueButton } from "../UI/Button";
+import { BlueButton } from "../Utils/Button";
 
 export function Dashboard() {
   const[space,setSpace] = useState<string>("")
