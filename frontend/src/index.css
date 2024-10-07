@@ -5,3 +5,27 @@
 body {
   @apply text-slate-200;
 }
+
+.btn {
+  background-color: blue;
+}
+
+.disabled-btn {
+  background-color: red;
+}
+
+.blue-button {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  color: white;
+  background-color:#2563eb  ;
+}
+
+.disabled-button {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  color: white;
+  background-color:#60a5fa  ;
+}

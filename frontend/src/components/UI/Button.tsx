@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 
 interface ButtonProps {
   text: string;
@@ -6,11 +6,23 @@ interface ButtonProps {
 }
 
 export const BlueButton = ({ text, onClick }: ButtonProps) => {
+  const [isDisabled,setIsDisabled] = useState(false) ;
+
+  function handleButton(e:React.MouseEvent<HTMLButtonElement>) {
+    setIsDisabled(true)
+
+    setTimeout(()=>{
+      setIsDisabled(false)
+    },2000)
+
+    onClick(e)
+  }
   return (
     <>
-      <button
-        className="border rounded-lg font-medium text-white bg-blue-600 p-2"
-        onClick={onClick}
+      <button disabled={isDisabled}
+        // className="border rounded-lg font-medium text-white bg-blue-600 p-2"
+        className={isDisabled?"disabled-button" : "blue-button"}
+        onClick={handleButton}
       >
         {text}
       </button>

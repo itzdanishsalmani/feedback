@@ -5,6 +5,7 @@ import { RatingReview } from "../Utils/RatingReview";
 import { toast } from "react-toastify";
 import { ImageEffect } from "../UI/ImageEffect";
 import { NavBarOther } from "../UI/NavBarOther";
+import { BlueButton } from "../UI/Button";
 
 export function UserSpace() {
   const [rating, setRating] = useState<number>(0);
@@ -37,11 +38,11 @@ export function UserSpace() {
           setProfileImage(profileImage)
         }
         if (res.data.error) {
-          setSpaceNotFound(true);
+          setSpaceNotFound(false);
         }
       } catch (error) {
         console.error("API call failed:", error);
-        setSpaceNotFound(true);
+        setSpaceNotFound(false);
       }
     }
 
@@ -181,12 +182,10 @@ export function UserSpace() {
               </div>
 
               <div className="mt-6">
-                <button
-                  className="px-6 py-2 rounded-lg bg-blue-600 font-medium text-white"
-                  onClick={sendReview}
-                >
-                  Send
-                </button>
+
+                <BlueButton 
+                text="Send"
+                onClick={sendReview}/>
               </div>
             </div>
           </div>
@@ -220,12 +219,9 @@ export function UserSpace() {
         </div>
 
         <div className="mt-12">
-          <button
-            className="px-6 py-2 rounded-lg bg-blue-600 font-medium text-white cursor-pointer"
-            onClick={() => setShowPopup(!showPopup)}
-          >
-            write
-          </button>
+          <BlueButton 
+          text="write"
+          onClick={() => setShowPopup(!showPopup)}/>
         </div>
       </div>
     </div>

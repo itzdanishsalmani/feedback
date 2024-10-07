@@ -44,11 +44,7 @@ export const MainSection = () => {
         <p className="underline text-slate-400">See our pricing</p>
       </div>
 
-      <div className="mt-6">
-        <video src="video.mp4" controls></video>
-      </div>
-
-      <div className="mt-6 text-2xl font-bold flex justify-center text-slate-400">
+      <div className="mt-12 text-2xl font-bold flex justify-center text-slate-400">
         Trusted customers
       </div>
 

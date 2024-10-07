@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "../BaseURL/axios";
 import { toast } from "react-toastify";
+import { BlueButton } from "../UI/Button";
 
 export function Dashboard() {
   const[space,setSpace] = useState<string>("")
@@ -74,9 +75,10 @@ function Space({space,showCreateSpace}:any) {
         </div>
         { showCreateSpace &&
         <div>
-          <button className="p-2 rounded-lg bg-blue-500 text-white font-semibold " onClick={()=>{
-            navigate('/create')
-          }}>Create Space</button>
+
+          <BlueButton 
+          text="Create Space"
+          onClick={()=>(navigate('/create'))}/>
         </div>
 }
       </div>
