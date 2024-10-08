@@ -38,11 +38,11 @@ export function UserSpace() {
           setProfileImage(profileImage);
         }
         if (res.data.error) {
-          setSpaceNotFound(false);
+          setSpaceNotFound(true);
         }
       } catch (error) {
         console.error("API call failed:", error);
-        setSpaceNotFound(false);
+        setSpaceNotFound(true);
       }
     }
 
