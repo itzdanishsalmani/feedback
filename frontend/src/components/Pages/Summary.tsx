@@ -116,7 +116,7 @@ export function Summary() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [reviews]);
 
   async function fetchData() {
     try {
