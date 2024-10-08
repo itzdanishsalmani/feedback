@@ -9,6 +9,7 @@ interface Review {
   review: string;
   name: string;
   email: string;
+  date: Date;
 }
 
 interface CardsProps {
@@ -71,6 +72,8 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, like, setLike }) => {
       <div className="mt-4 break-words">{review.review}</div>
       <div className="mt-4">Name: {review.name}</div>
       <div className="mt-4">Email: {review.email} </div>
+      <div className="mt-4">Date: {new Date(review.date).toLocaleDateString()} </div>
+
     </div>
   );
 };
@@ -104,6 +107,7 @@ export function Summary() {
 
   const [profileImage,setProfileImage] = useState<any>(null)
 
+  const [date,setDate] = useState<string>("date");
   //variable to store the spacename and reviewId to create a embedded code
 
   const spacename = space.toLocaleLowerCase();
@@ -112,7 +116,7 @@ export function Summary() {
 
   useEffect(() => {
     fetchData();
-  }, [reviews]);
+  }, []);
 
   async function fetchData() {
     try {
@@ -124,7 +128,9 @@ export function Summary() {
       if (
         res.data.space.spacename ||
         (res.data.getReview && res.data.getReview.length !== 0)
-      ) {
+      )
+      {
+        console.log(res.data)
         setReviews(res.data.getReview);
         setSpace(res.data.space.spacename);
         setProfileImage(`https://testimonial-backend-8ylm.onrender.com/${res.data.space.profileImage}`)
@@ -143,7 +149,7 @@ export function Summary() {
     navigator.clipboard.writeText(codeData).then(() => {
       setTimeout(() => {
         setcopied(false);
-      }, 500);
+      }, 1000);
     });
   };
 
@@ -184,7 +190,7 @@ export function Summary() {
                       onClick={() =>
                         copyToClipboard(`
 <div id="testimonial-widget-container"></div>
-<div id="main-[${reviewId}][${spacename}][${theme}]"></div>
+<div id="main-[${reviewId}][${spacename}][${theme}][${date}]"></div>
 <script src="https://testimonial-backend-8ylm.onrender.com/js/widget.js"></script>`)
                       }
                     >
@@ -201,7 +207,7 @@ export function Summary() {
                     <div className="mt-8 md:mt-2 ">
                       {`
 <div id="testimonial-widget-container"></div>
-<div id="main-[${reviewId}][${spacename}][${theme}]"></div>
+<div id="main-[${reviewId}][${spacename}][${theme}][${date}]"></div>
 <script src="https://testimonial-backend-8ylm.onrender.com/widget.js"></script>
     `}
                     </div>
@@ -233,8 +239,12 @@ export function Summary() {
                   </label>
                 </div>
                 <br />
-                <input type="checkbox" name="" id="date" /> Show date
-              </div>
+                <input
+  type="checkbox"
+  name="date"
+  checked={date === "date"}
+  onChange={() => setDate(date === "date" ? "nodate" : "date")}
+/> Show date              </div>
             </div>
           </div>
         )}

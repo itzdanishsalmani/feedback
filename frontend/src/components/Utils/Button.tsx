@@ -13,7 +13,7 @@ export const BlueButton = ({ text, onClick }: ButtonProps) => {
 
     setTimeout(()=>{
       setIsDisabled(false)
-    },3000)
+    },5000)
 
     onClick(e)
   }
@@ -38,7 +38,7 @@ export const WhiteButton = ({ text, onClick }: ButtonProps) => {
 
     setTimeout(()=>{
       setIsDisabled(false)
-    },3000)
+    },5000)
 
     onClick(e)
   }

@@ -306,7 +306,7 @@ app.post("/createspace", authMiddleware, async (req, res) => {
 });
 
 app.post("/createreview", async (req, res) => {
-  const { review, stars, name, email, spacename } = req.body;
+  const { review, stars, name, email, spacename,date } = req.body;
 
   if (!review || !stars || !name || !email || !spacename) {
 
@@ -315,7 +315,7 @@ app.post("/createreview", async (req, res) => {
     });
   }
 
-  console.log({ review, stars, name, email, spacename });
+  console.log({ review, stars, name, email, spacename, date });
 
   try {
     const user = await prisma.userspace.findFirst({
@@ -342,6 +342,7 @@ app.post("/createreview", async (req, res) => {
         name: name,
         email: email,
         userId: userId,
+        date:date
       },
     });
 
@@ -381,7 +382,8 @@ app.get("/testimonial/:spacename", async (req, res) => {
         review:true,
         stars:true,
         email:true,
-        name:true
+        name:true,
+        date:true
       }
     }) 
 
@@ -411,6 +413,7 @@ app.get("/getreview", authMiddleware, async (req, res) => {
         name: true,
         email: true,
         stars: true,
+        date:true
       },
     });
 

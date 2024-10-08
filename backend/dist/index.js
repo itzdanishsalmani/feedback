@@ -270,13 +270,13 @@ app.post("/createspace", auth_1.authMiddleware, (req, res) => __awaiter(void 0, 
     });
 }));
 app.post("/createreview", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { review, stars, name, email, spacename } = req.body;
+    const { review, stars, name, email, spacename, date } = req.body;
     if (!review || !stars || !name || !email || !spacename) {
         return res.json({
             error: "Fields are required",
         });
     }
-    console.log({ review, stars, name, email, spacename });
+    console.log({ review, stars, name, email, spacename, date });
     try {
         const user = yield prisma.userspace.findFirst({
             where: {
@@ -299,6 +299,7 @@ app.post("/createreview", (req, res) => __awaiter(void 0, void 0, void 0, functi
                 name: name,
                 email: email,
                 userId: userId,
+                date: date
             },
         });
         return res.json({
@@ -334,7 +335,8 @@ app.get("/testimonial/:spacename", (req, res) => __awaiter(void 0, void 0, void 
                 review: true,
                 stars: true,
                 email: true,
-                name: true
+                name: true,
+                date: true
             }
         });
         return res.json({
@@ -361,6 +363,7 @@ app.get("/getreview", auth_1.authMiddleware, (req, res) => __awaiter(void 0, voi
                 name: true,
                 email: true,
                 stars: true,
+                date: true
             },
         });
         const space = yield prisma.userspace.findFirst({
